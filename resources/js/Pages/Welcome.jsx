@@ -1,7 +1,7 @@
 export default function Welcome() {
     return (
         <>
-            <h1>Hello this is welcome</h1>
+            <h1 className="font-medium text-blue-500 dark:text-white">Hello This is Welcome</h1>
         </>
     )
 }
