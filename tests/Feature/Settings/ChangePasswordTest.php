@@ -3,8 +3,6 @@
 namespace Tests\Feature\Settings;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
@@ -28,9 +26,10 @@ class ChangePasswordTest extends TestCase
 
         $response = $this->get(route('settings.password'));
 
-        $response->assertInertia(fn(AssertableInertia $page) => $page
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
                 ->component('Settings/Password')
-            );
+        );
         $response->assertStatus(200);
     }
 

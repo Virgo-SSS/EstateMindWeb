@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\ActionContracts\Auth\LoginActionInterface;
 use App\ActionContracts\Settings\ChangePasswordActionInterface;
-use App\Actions\Auth\LoginAction;
 use App\Actions\Settings\ChangePasswordAction;
 use Illuminate\Support\ServiceProvider;
 

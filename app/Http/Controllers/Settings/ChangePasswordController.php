@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Settings;
 
 use App\ActionContracts\Settings\ChangePasswordActionInterface;
-use App\Http\Controllers\Auth\Hash;
-use App\Http\Controllers\Auth\Password;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ChangePasswordRequest;
 use Illuminate\Http\RedirectResponse;
