@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -10,12 +10,14 @@ Route::get('/', function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
+    Route::get('/login', [AuthenticatedSessionController::class, 'index'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'login'])->name('login.attempt');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
 });
