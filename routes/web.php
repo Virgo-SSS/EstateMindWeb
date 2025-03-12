@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Settings\ChangePasswordController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -18,4 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
+
+    Route::get('/settings/password', [ChangePasswordController::class, 'index'])->name('settings.password');
+    Route::post('/settings/password', [ChangePasswordController::class, 'update'])->name('settings.password.update');
 });

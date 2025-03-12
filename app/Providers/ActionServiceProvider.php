@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\ActionContracts\Auth\LoginActionInterface;
+use App\ActionContracts\Settings\ChangePasswordActionInterface;
 use App\Actions\Auth\LoginAction;
+use App\Actions\Settings\ChangePasswordAction;
 use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider
@@ -21,6 +23,6 @@ class ActionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->bind(LoginActionInterface::class, LoginAction::class);
+        $this->app->bind(ChangePasswordActionInterface::class, ChangePasswordAction::class);
     }
 }
