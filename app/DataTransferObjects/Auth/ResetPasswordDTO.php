@@ -9,8 +9,8 @@ class ResetPasswordDTO
         public string $password,
         public string $password_confirmation,
         public string $token
-    )
-    {}
+    ) {
+    }
 
     public static function fromArray(array $array): self
     {

@@ -99,4 +99,3 @@ class ForgotPasswordTest extends TestCase
         $response->assertSessionHasErrors('email', __(Password::RESET_THROTTLED));
     }
 }
-

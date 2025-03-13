@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\ActionContracts\Auth\ResetPasswordActionInterface;
-use App\DataTransferObjects\Auth\ResetPasswordDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
-use App\Http\Requests\Auth\ResetPasswordRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
