@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\ChangePasswordController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,4 +31,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings/password', [ChangePasswordController::class, 'index'])->name('settings.password');
     Route::post('/settings/password', [ChangePasswordController::class, 'update'])->name('settings.password.update');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    Route::group(['middleware' => 'can:manage-users'], function () {
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    });
 });
