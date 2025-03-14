@@ -9,8 +9,7 @@ class CreateUserDTO
         public string $email,
         public string $password,
         public bool $is_super_admin,
-    )
-    {
+    ) {
     }
 
     public static function fromArray(array $data): self

@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class UserStoreRequest extends FormRequest
 {

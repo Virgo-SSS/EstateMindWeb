@@ -136,7 +136,7 @@ class CreateUserTest extends TestCase
                 'field' => 'email',
                 'value' => 'existing@example.com',
                 'validData' => [],
-                'setup' => function() {
+                'setup' => function () {
                     User::factory()->create(['email' => 'existing@example.com']);
                 },
             ],
