@@ -3,7 +3,6 @@
 namespace Tests\Feature\Projects;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -26,7 +25,7 @@ class ProjectTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertInertia(
-            fn(AssertableInertia $page) => $page
+            fn (AssertableInertia $page) => $page
                 ->component('Projects/Projects')
                 ->has('projects')
         );

@@ -13,7 +13,7 @@ class ProjectController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Projects/Projects',[
+        return Inertia::render('Projects/Projects', [
             'projects' => Project::query()->get()
         ]);
     }

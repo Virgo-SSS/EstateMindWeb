@@ -4,7 +4,6 @@ namespace Tests\Feature\Projects;
 
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EditProjectTest extends TestCase
