@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers;
 
 use App\ActionContracts\Users\CreateUserActionInterface;
 use App\ActionContracts\Users\EditUserActionInterface;
 use App\DataTransferObjects\Users\CreateUserDTO;
 use App\DataTransferObjects\Users\EditUserDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;

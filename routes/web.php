@@ -4,8 +4,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Settings\ChangePasswordController;
-use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -41,4 +42,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
+
+    Route::get('project', [ProjectController::class, 'index'])->name('project.index');
+    Route::post('project', [ProjectController::class, 'store'])->name('project.store');
+    Route::put('project/{project}', [ProjectController::class, 'update'])->name('project.update');
+    Route::delete('project/{project}', [ProjectController::class, 'destroy'])->name('project.destroy');
 });
