@@ -13,9 +13,7 @@ class UserTest extends TestCase
 
     public function test_auth_user_can_access_users_page(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $this->nonSuperAdmin();
 
         $response = $this->get(route('users.index'));
 

@@ -11,9 +11,7 @@ class LogoutTest extends TestCase
     use RefreshDatabase;
     public function test_user_can_logout(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('logout'));
 

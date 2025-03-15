@@ -14,9 +14,7 @@ class CreateUserTest extends TestCase
 
     public function test_super_admin_can_access_create_user_page(): void
     {
-        $superAdmin = User::factory()->create(['is_super_admin' => true]);
-
-        $this->actingAs($superAdmin);
+        $this->superAdmin();
 
         $response = $this->get(route('users.create'));
 
@@ -26,9 +24,7 @@ class CreateUserTest extends TestCase
 
     public function test_non_super_admin_cannot_access_create_user_page(): void
     {
-        $user = User::factory()->create(['is_super_admin' => false]);
-
-        $this->actingAs($user);
+        $this->nonSuperAdmin();
 
         $response = $this->get(route('users.create'));
 
@@ -45,8 +41,7 @@ class CreateUserTest extends TestCase
 
     public function test_super_admin_can_create_user(): void
     {
-        $superAdmin = User::factory()->create(['is_super_admin' => true]);
-        $this->actingAs($superAdmin);
+        $this->superAdmin();
 
         $request = User::factory()->make()->toArray();
         $request['password'] = 'password';
@@ -61,8 +56,7 @@ class CreateUserTest extends TestCase
 
     public function test_non_super_admin_cannot_create_user(): void
     {
-        $user = User::factory()->create(['is_super_admin' => false]);
-        $this->actingAs($user);
+        $this->nonSuperAdmin();
 
         $request = User::factory()->make()->toArray();
         $request['password'] = 'password';
@@ -92,9 +86,7 @@ class CreateUserTest extends TestCase
             $setup();
         }
 
-        $superAdmin = User::factory()->create(['is_super_admin' => true]);
-
-        $this->actingAs($superAdmin);
+        $this->superAdmin();
 
         $data = array_merge([
             'name' => 'Test User',

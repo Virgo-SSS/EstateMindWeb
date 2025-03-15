@@ -20,9 +20,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_can_view_change_password_page(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $this->nonSuperAdmin();
 
         $response = $this->get(route('settings.password'));
 
@@ -35,9 +33,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_can_change_password(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('settings.password.update'), [
             'current_password' => 'password',
@@ -52,9 +48,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_cant_change_password_with_invalid_current_password(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('settings.password.update'), [
             'current_password' => 'invalid-password',
@@ -68,9 +62,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_cant_change_password_with_invalid_password_confirmation(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('settings.password.update'), [
             'current_password' => 'password',
@@ -84,9 +76,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_cant_change_password_with_short_password(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('settings.password.update'), [
             'current_password' => 'password',
@@ -100,9 +90,7 @@ class ChangePasswordTest extends TestCase
 
     public function test_auth_user_cant_change_password_if_the_fields_are_empty(): void
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $user = $this->nonSuperAdmin();
 
         $response = $this->post(route('settings.password.update'), [
             'current_password' => '',

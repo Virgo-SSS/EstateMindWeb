@@ -26,9 +26,9 @@ class LoginTest extends TestCase
 
     public function test_auth_user_cant_access_login_page(): void
     {
-        $user = User::factory()->create();
+        $this->nonSuperAdmin();
 
-        $response = $this->actingAs($user)->get(route('login'));
+        $response = $this->get(route('login'));
 
         $response->assertRedirect(route('dashboard'));
     }
