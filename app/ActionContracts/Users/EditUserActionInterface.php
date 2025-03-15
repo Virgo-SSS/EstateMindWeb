@@ -2,7 +2,6 @@
 
 namespace App\ActionContracts\Users;
 
-use App\DataTransferObjects\Users\CreateUserDTO;
 use App\DataTransferObjects\Users\EditUserDTO;
 use App\Models\User;
 

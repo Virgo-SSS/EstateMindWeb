@@ -4,7 +4,6 @@ namespace Tests\Feature\Users;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -21,7 +20,8 @@ class EditUserTest extends TestCase
 
         $response = $this->get(route('users.edit', $user));
 
-        $response->assertInertia(fn(AssertableInertia $page) => $page
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
             ->component('Users/EditUser')
             ->has('user')
         );

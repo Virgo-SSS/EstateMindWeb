@@ -3,7 +3,6 @@
 namespace App\Actions\Users;
 
 use App\ActionContracts\Users\EditUserActionInterface;
-use App\DataTransferObjects\Users\CreateUserDTO;
 use App\DataTransferObjects\Users\EditUserDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
