@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Users;
 
 use App\ActionContracts\Users\CreateUserActionInterface;
+use App\ActionContracts\Users\EditUserActionInterface;
 use App\DataTransferObjects\Users\CreateUserDTO;
+use App\DataTransferObjects\Users\EditUserDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserStoreRequest;
+use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -33,4 +36,22 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
+
+    public function edit(User $user): Response
+    {
+        return Inertia::render('Users/EditUser', [
+            'user' => $user,
+        ]);
+    }
+
+    public function update(UserUpdateRequest $request, User $user, EditUserActionInterface $action): RedirectResponse
+    {
+        $action->handle(
+            $user,
+            EditUserDTO::fromArray($request->validated())
+        );
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    }
+
 }

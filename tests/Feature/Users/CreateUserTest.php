@@ -4,6 +4,7 @@ namespace Tests\Feature\Users;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -20,7 +21,7 @@ class CreateUserTest extends TestCase
         $response = $this->get(route('users.create'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('Users/CreateUser'));
+        $response->assertInertia(fn (AssertableInertia $page) => $page->component('Users/CreateUser'));
     }
 
     public function test_non_super_admin_cannot_access_create_user_page(): void

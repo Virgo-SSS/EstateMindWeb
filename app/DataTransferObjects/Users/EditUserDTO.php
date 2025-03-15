@@ -2,12 +2,12 @@
 
 namespace App\DataTransferObjects\Users;
 
-class CreateUserDTO
+class EditUserDTO
 {
     public function __construct(
         public string $name,
         public string $email,
-        public string $password,
+        public ?string $password,
         public bool $isSuperAdmin,
     ) {
     }
@@ -17,7 +17,7 @@ class CreateUserDTO
         return new self(
             name: $data['name'],
             email: $data['email'],
-            password: $data['password'],
+            password: $data['password'] ?? null,
             isSuperAdmin: $data['is_super_admin'],
         );
     }

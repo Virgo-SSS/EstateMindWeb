@@ -15,7 +15,7 @@ class CreateUserAction implements CreateUserActionInterface
             'name' => $data->name,
             'email' => $data->email,
             'password' => Hash::make($data->password),
-            'is_super_admin' => $data->is_super_admin,
+            'is_super_admin' => $data->isSuperAdmin,
         ]);
     }
 }
