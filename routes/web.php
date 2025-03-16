@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Settings\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,8 +44,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
-    Route::get('project', [ProjectController::class, 'index'])->name('project.index');
-    Route::post('project', [ProjectController::class, 'store'])->name('project.store');
-    Route::put('project/{project}', [ProjectController::class, 'update'])->name('project.update');
-    Route::delete('project/{project}', [ProjectController::class, 'destroy'])->name('project.destroy');
+    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
+    Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
+    Route::put('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
+    Route::delete('/project/{project}', [ProjectController::class, 'destroy'])->name('project.destroy');
+
+    Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/sales/create', [SaleController::class, 'create'])->name('sales.create');
+    Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
+    Route::get('/sales/{sale}/edit', [SaleController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/{sale}', [SaleController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
 });

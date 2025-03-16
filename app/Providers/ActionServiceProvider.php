@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\ActionContracts\Auth\ResetPasswordActionInterface;
+use App\ActionContracts\Sales\CreateSaleActionInterface;
 use App\ActionContracts\Settings\ChangePasswordActionInterface;
 use App\ActionContracts\Users\CreateUserActionInterface;
 use App\ActionContracts\Users\EditUserActionInterface;
 use App\Actions\Auth\ResetPasswordAction;
+use App\Actions\Sales\CreateSaleAction;
 use App\Actions\Settings\ChangePasswordAction;
 use App\Actions\Users\CreateUserAction;
 use App\Actions\Users\EditUserAction;
@@ -31,5 +33,6 @@ class ActionServiceProvider extends ServiceProvider
         $this->app->bind(ResetPasswordActionInterface::class, ResetPasswordAction::class);
         $this->app->bind(CreateUserActionInterface::class, CreateUserAction::class);
         $this->app->bind(EditUserActionInterface::class, EditUserAction::class);
+        $this->app->bind(CreateSaleActionInterface::class, CreateSaleAction::class);
     }
 }
