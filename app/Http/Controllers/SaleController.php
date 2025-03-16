@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ActionContracts\Sales\CreateSaleActionInterface;
 use App\DataTransferObjects\Sales\CreateSaleDTO;
 use App\Http\Requests\Sales\SaleStoreRequest;
+use App\Http\Requests\Sales\SaleUpdateRequest;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\RedirectResponse;
@@ -38,4 +39,16 @@ class SaleController extends Controller
 
         return redirect()->route('sales.index')->with('success', 'Sale created successfully.');
     }
+
+    public function edit(Sale $sale): Response
+    {
+        $projects = Project::query()->get();
+
+        return Inertia::render('Sales/EditSale', [
+            'sale' => $sale,
+            'projects' => $projects
+        ]);
+    }
+
+    public function update(SaleUpdateRequest $request)
 }
