@@ -52,15 +52,15 @@ class CreateSaleTest extends TestCase
 
         $response = $this->post(route('sales.store'), [
             'project_id' => $project->id,
-            'date' => '2021-10-10',
+            'date' => '2021-10',
             'quantity' => 10,
         ]);
 
         $response->assertRedirect(route('sales.index'));
         $response->assertSessionHas('success', 'Sale created successfully.');
         $this->assertDatabaseHas('sales', [
-            'project_id' => 1,
-            'date' => '2021-10-10',
+            'project_id' => $project->id,
+            'date' => '2021-10-01',
             'quantity' => 10,
         ]);
     }
