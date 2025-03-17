@@ -10,7 +10,6 @@ use App\Http\Requests\Sales\SaleUpdateRequest;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 

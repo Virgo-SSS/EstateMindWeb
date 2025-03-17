@@ -5,7 +5,6 @@ namespace Tests\Feature\Sales;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -38,7 +37,8 @@ class EditSaleTest extends TestCase
 
         $response = $this->get(route('sales.edit', $sale));
         $response->assertOk();
-        $response->assertInertia(fn (AssertableInertia $page) => $page
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
             ->component('Sales/EditSale')
             ->has('sale')
             ->has('projects')

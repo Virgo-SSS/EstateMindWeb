@@ -4,7 +4,6 @@ namespace Tests\Feature\Sales;
 
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -27,7 +26,8 @@ class CreateSaleTest extends TestCase
         $response = $this->get(route('sales.create'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn (AssertableInertia $page) => $page
+        $response->assertInertia(
+            fn (AssertableInertia $page) => $page
             ->component('Sales/CreateSale')
             ->has('projects')
         );
@@ -66,7 +66,8 @@ class CreateSaleTest extends TestCase
     }
 
     #[DataProvider('validationDataProvider')]
-    public function testSaleValidationRules(string $field, mixed $value, string $expectedError): void {
+    public function testSaleValidationRules(string $field, mixed $value, string $expectedError): void
+    {
         $this->nonSuperAdmin();
 
         // Create a project for valid requests

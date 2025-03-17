@@ -4,8 +4,6 @@ namespace Tests\Feature\Sales;
 
 use App\Models\Project;
 use App\Models\Sale;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DeleteSaleTest extends TestCase

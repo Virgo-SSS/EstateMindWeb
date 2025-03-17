@@ -11,7 +11,7 @@ class CreateSaleDTO
         public Project $project,
         public Carbon $date,
         public int $quantity,
-    ){
+    ) {
     }
 
     public static function fromArray(array $data): self
