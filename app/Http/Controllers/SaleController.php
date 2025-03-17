@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ActionContracts\Sales\CreateSaleActionInterface;
+use App\ActionContracts\Sales\EditSaleActionInterface;
 use App\DataTransferObjects\Sales\CreateSaleDTO;
 use App\Http\Requests\Sales\SaleStoreRequest;
 use App\Http\Requests\Sales\SaleUpdateRequest;
@@ -50,5 +51,13 @@ class SaleController extends Controller
         ]);
     }
 
-    public function update(SaleUpdateRequest $request)
+    public function update(SaleUpdateRequest $request, Sale $sale, EditSaleActionInterface $action): RedirectResponse
+    {
+        $action->handle(
+            $sale,
+            CreateSaleDTO::fromArray($request->validated())
+        );
+
+        return redirect()->route('sales.index')->with('success', 'Sale updated successfully.');
+    }
 }

@@ -17,7 +17,8 @@ class SaleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'date' => $this->faker->date('Y-m'),
+            'quantity' => $this->faker->randomNumber(),
         ];
     }
 }
