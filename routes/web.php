@@ -22,10 +22,12 @@ Route::middleware('guest')->group(function () {
 
 });
 
+Route::get('/', function () {
+    return Inertia::render('Dashboard');
+});
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    });
+  
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
