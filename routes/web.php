@@ -22,14 +22,9 @@ Route::middleware('guest')->group(function () {
 
 });
 
-Route::get('/', function () {
-    return Inertia::render('Dashboard');
-});
 
 Route::middleware('auth')->group(function () {
-  
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
 
