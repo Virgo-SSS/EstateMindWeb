@@ -15,7 +15,7 @@ const LayoutContent = ({ children }) => {
     } = useSidebar()
 
     return ( 
-        <div className="min-h-screen xl:flex">
+        <div className="min-h-screen xl:flex bg-[#f7f7f7] dark:bg-gray-900">
             <div>
                 <AppSidebar />
                 <Backdrop />

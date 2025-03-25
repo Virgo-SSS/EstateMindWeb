@@ -9,7 +9,6 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Settings\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'index'])->name('login');
@@ -25,7 +24,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
+    
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
 
     Route::get('/settings/password', [ChangePasswordController::class, 'index'])->name('settings.password');
