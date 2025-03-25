@@ -1,4 +1,4 @@
-import AuthLayout from "./AuthLayout";
+import AuthLayout from "../../layout/AuthLayout"
 import { useState } from "react"
 import { Link } from "@inertiajs/react"
 import Label from "../../components/form/Label"

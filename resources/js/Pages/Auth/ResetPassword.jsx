@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import InputField from "../../components/form/input/InputField";
 import Label from "../../components/form/Label";
-import AuthLayout from "./AuthLayout";
+import AuthLayout from "../../layout/AuthLayout"
 import Button from "../../components/ui/button/Button";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
