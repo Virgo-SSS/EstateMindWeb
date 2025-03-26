@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { DropdownItem } from "../ui/dropdown/DropdownItem"
 import { Dropdown } from "../ui/dropdown/Dropdown"
-import { Link } from "@inertiajs/react"
+import { Link, useForm } from "@inertiajs/react"
 
 export default function UserDropdown() {
 	const [isOpen, setIsOpen] = useState(false)
+	const { post } = useForm()
 
 	function toggleDropdown() {
 		setIsOpen(!isOpen)
@@ -12,6 +13,10 @@ export default function UserDropdown() {
 
 	function closeDropdown() {
 		setIsOpen(false)
+	}
+
+	const handleLogout = () => {
+		post(route("logout"))
 	}
 
 	return (
@@ -113,10 +118,10 @@ export default function UserDropdown() {
 					</li>
 					<li>
 						<DropdownItem
-						onItemClick={closeDropdown}
-						tag="a"
-						to="/profile"
-						className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+							onItemClick={closeDropdown}
+							tag="a"
+							to="/profile"
+							className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
 						>
 						<svg
 							className="fill-gray-500 group-hover:fill-gray-700 dark:fill-gray-400 dark:group-hover:fill-gray-300"
@@ -139,7 +144,7 @@ export default function UserDropdown() {
 				</ul>
 
 				<Link
-					to="/signin"
+					onClick={handleLogout}
 					className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
 				>
 					<svg

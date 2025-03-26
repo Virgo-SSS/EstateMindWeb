@@ -8,7 +8,6 @@ import UserDropdown from "../components/header/UserDropdown"
 
 const AppHeader = () => {
 	const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false)
-
 	const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar()
 
 	const handleToggle = () => {
@@ -87,7 +86,7 @@ const AppHeader = () => {
 					
 
 					{/* lg:hidden class is for hide logo if the size screen is large */}
-					<Link to="/" className="lg:hidden">
+					<Link href="/" className="lg:hidden">
 						<img
 							src="./images/logo/abp-logo-icon.png"
 							alt="Logo"
