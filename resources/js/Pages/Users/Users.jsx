@@ -1,7 +1,11 @@
+import AppLayout from "../../layout/AppLayout";
+
 export default function Users() {
     return (
-        <div>
-            <h1>Users</h1>
-        </div>
+        <>
+            <AppLayout>
+                <h1 className="font-medium text-blue-500 dark:text-white">Hello This is users page</h1>
+            </AppLayout>
+        </>
     );
 }

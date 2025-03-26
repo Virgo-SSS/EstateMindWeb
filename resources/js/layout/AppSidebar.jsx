@@ -1,97 +1,44 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, usePage } from "@inertiajs/react"
-
-import {
-    BoxCubeIcon,
-    CalenderIcon,
-    ChevronDownIcon,
-    GridIcon,
-    ListIcon,
-    PageIcon,
-    PieChartIcon,
-    PlugInIcon,
-    TableIcon,
-    UserCircleIcon
-} from "../icons"
 import { useSidebar } from "../context/SidebarContext"
 import SidebarWidget from "./SidebarWidget"
+import { ChevronDown, Coins, FolderKanban, LayoutGrid, UserCog } from "lucide-react"
 
 const navItems = [
     {
-        icon: <GridIcon />,
+        icon: <LayoutGrid />,
         name: "Dashboard",
-        subItems: [{ name: "Ecommerce", path: "/", }]
+        path: route("dashboard"),
     },
     {
-        icon: <CalenderIcon />,
-        name: "Calendar",
-        path: "/calendar"
+        icon: <UserCog />,
+        name: "Users",
+        path: route("users.index"),
     },
     {
-        icon: <UserCircleIcon />,
-        name: "User Profile",
-        path: "/profile"
+        icon: <Coins />,
+        name: "Sales",
+        path: route("sales.index"),
     },
     {
-        name: "Forms",
-        icon: <ListIcon />,
-        subItems: [{ name: "Form Elements", path: "/form-elements", }]
-    },
-    {
-        name: "Tables",
-        icon: <TableIcon />,
-        subItems: [{ name: "Basic Tables", path: "/basic-tables", }]
-    },
-    {
-        name: "Pages",
-        icon: <PageIcon />,
-        subItems: [
-            { name: "Blank Page", path: "/blank", },
-            { name: "404 Error", path: "/error-404", }
-        ]
-    },
-    {
-        icon: <PieChartIcon />,
-        name: "Charts",
-        subItems: [
-            { name: "Line Chart", path: "/line-chart", },
-            { name: "Bar Chart", path: "/bar-chart", }
-        ]
-    },
-    {
-        icon: <BoxCubeIcon />,
-        name: "UI Elements",
-        subItems: [
-            { name: "Alerts", path: "/alerts", },
-            { name: "Avatar", path: "/avatars", },
-            { name: "Badge", path: "/badge", },
-            { name: "Buttons", path: "/buttons", },
-            { name: "Images", path: "/images", },
-            { name: "Videos", path: "/videos", }
-        ]
-    },
-    {
-        icon: <PlugInIcon />,
-        name: "Authentication",
-        subItems: [
-            { name: "Sign In", path: "/signin", },
-            { name: "Sign Up", path: "/signup", }
-        ]
+        icon: <FolderKanban />,
+        name: "Projects",
+        path: route("project.index"),
     }
 ]
 
 const AppSidebar = () => {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
     const { url } = usePage()
+    const fullUrl = route(route().current())
 
     const [openSubmenu, setOpenSubmenu] = useState(null)
     const [subMenuHeight, setSubMenuHeight] = useState({})
     const subMenuRefs = useRef({})
 
-    // const isActive = (path: string) => location.pathname === path;
-    const isActive = useCallback((path) => url === path,
-        [url]
-    )
+    const isActive = useCallback((path) => {
+        return fullUrl === path
+    }, [fullUrl])
 
     useEffect(() => {
         let submenuMatched = false;
@@ -174,7 +121,7 @@ const AppSidebar = () => {
                             )}
 
                             {(isExpanded || isHovered || isMobileOpen) && (
-                                <ChevronDownIcon
+                                <ChevronDown
                                     className={`ml-auto w-5 h-5 transition-transform duration-200 ${
                                         openSubmenu?.index === index
                                         ? "rotate-180 text-brand-500"
@@ -187,7 +134,7 @@ const AppSidebar = () => {
                         nav.path && (
                             // Parent menu that doesn't have sub menu
                             <Link
-                                to={nav.path}
+                                href={nav.path}
                                 className={`menu-item group ${
                                     isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
                                 }`}
@@ -226,7 +173,7 @@ const AppSidebar = () => {
                                 {nav.subItems.map(subItem => (
                                     <li key={subItem.name}>
                                         <Link
-                                            to={subItem.path}
+                                            href={subItem.path}
                                             className={`menu-dropdown-item ${
                                                 isActive(subItem.path)
                                                 ? "menu-dropdown-item-active"
@@ -272,7 +219,7 @@ const AppSidebar = () => {
                     }`
                 }
             >
-                <Link to="/">
+                <Link href="/">
                     {isExpanded || isHovered || isMobileOpen ? (
                         <img
                             src="/images/logo/abp-logo-icon.png"

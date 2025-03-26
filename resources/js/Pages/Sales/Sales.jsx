@@ -1,7 +1,11 @@
+import AppLayout from "../../layout/AppLayout"
+
 export default function Sales() {
     return (
-        <div>
-            <h1>Sales</h1>
-        </div>
+        <>
+            <AppLayout>
+                <h1>Sales</h1>
+            </AppLayout>
+        </>
     );
 }
