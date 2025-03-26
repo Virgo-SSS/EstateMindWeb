@@ -23,7 +23,7 @@ export const DropdownItem = ({
 
 	if (tag === "a" && to) {
 		return (
-			<Link to={to} className={combinedClasses} onClick={handleClick}>
+			<Link href={to} className={combinedClasses} onClick={handleClick}>
 				{children}
 			</Link>
 		)
