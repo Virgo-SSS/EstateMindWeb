@@ -1,4 +1,4 @@
-export default function InputField({
+export default function Input({
     type = "text",
     id,
     name,
@@ -45,7 +45,7 @@ export default function InputField({
             {hint && (
                 <p
                     className={`mt-1.5 text-xs ${
-                    error
+                        error
                         ? "text-error-500"
                         : success
                         ? "text-success-500"
