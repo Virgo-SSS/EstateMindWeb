@@ -1,10 +1,10 @@
 import { Eye, EyeOff } from "lucide-react";
 import AppLayout from "../../layout/AppLayout";
-import Label from "../../components/form/Label";
-import InputField from "../../components/form/input/InputField";
 import { useState } from "react";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import Button from "../../components/ui/button/Button";
+import Label from "../../components/ui/label/Label";
+import Input from "../../components/ui/input/Input";
 
 export default function Password() {
     const [showPassword, setShowPassword] = useState(false)
@@ -78,7 +78,7 @@ export default function Password() {
                                                 Current Password{" "}
                                                 <span className="text-error-500">*</span>{" "}
                                             </Label>
-                                            <InputField
+                                            <Input
                                                 id="current_password"
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your current password"
@@ -93,7 +93,7 @@ export default function Password() {
                                                 New Password{" "}
                                                 <span className="text-error-500">*</span>{" "}
                                             </Label>
-                                            <InputField
+                                            <Input
                                                 id="password"
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your new password"
@@ -108,7 +108,7 @@ export default function Password() {
                                                 Confirm Password{" "}
                                                 <span className="text-error-500">*</span>{" "}
                                             </Label>
-                                            <InputField
+                                            <Input
                                                 id="confirm_password"
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Confirm your new password"

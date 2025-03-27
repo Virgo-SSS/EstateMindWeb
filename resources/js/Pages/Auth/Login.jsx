@@ -1,13 +1,13 @@
 import AuthLayout from "../../layout/AuthLayout"
 import { useState } from "react"
 import { Link, useForm } from "@inertiajs/react"
-import Label from "../../components/form/Label"
-import InputField from "../../components/form/input/InputField"
 import Checkbox from "../../components/form/input/Checkbox"
 import Button from "../../components/ui/button/Button"
+import Input from "../../components/ui/input/Input"
 import { EyeIcon, EyeOff } from "lucide-react"
+import Label from "../../components/ui/label/Label"
 
-export default function Login() {
+export default function Login() {   
     const [showPassword, setShowPassword] = useState(false)
     const [isChecked, setIsChecked] = useState(false)
 
@@ -52,7 +52,7 @@ export default function Login() {
                                     <Label htmlFor={"email"}>
                                         Email <span className="text-error-500">*</span>{" "}
                                     </Label>
-                                    <InputField
+                                    <Input
                                         id="email"
                                         type="email" 
                                         placeholder="info@gmail.com" 
@@ -68,7 +68,7 @@ export default function Login() {
                                         Password <span className="text-error-500">*</span>{" "}
                                     </Label>
                                     <div className="relative">
-                                        <InputField
+                                        <Input
                                             id="password"
                                             placeholder="Enter your password"
                                             type={showPassword ? "text" : "password"}

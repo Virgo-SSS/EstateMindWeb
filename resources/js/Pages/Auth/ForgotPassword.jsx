@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
-import InputField from "../../components/form/input/InputField";
-import Label from "../../components/form/Label";
+import Input from "../../components/ui/input/Input"
+import Label from "../../components/ui/label/Label"
 import AuthLayout from "../../layout/AuthLayout";
 import Button from "../../components/ui/button/Button";
 
@@ -30,7 +30,7 @@ export default function ForgotPassord() {
                                     <Label>
                                         Email <span className="text-error-500">*</span>{" "}
                                     </Label>
-                                    <InputField placeholder="Enter your email address" />
+                                    <Input placeholder="Enter your email address" />
                                 </div>
 
                                 <Button className="w-full dark:bg-[#C9262C]" size="sm">

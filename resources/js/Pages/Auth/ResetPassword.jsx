@@ -1,10 +1,10 @@
 import { Link } from "@inertiajs/react";
-import InputField from "../../components/form/input/InputField";
-import Label from "../../components/form/Label";
 import AuthLayout from "../../layout/AuthLayout"
 import Button from "../../components/ui/button/Button";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import Label from "../../components/ui/label/Label";
+import Input from "../../components/ui/input/Input";
+import { EyeIcon, EyeOff } from "lucide-react";
 
 export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false)
@@ -37,7 +37,7 @@ export default function ResetPassword() {
                                         New Password <span className="text-error-500">*</span>{" "}
                                     </Label>
                                     <div className="relative">
-                                        <InputField
+                                        <Input
                                             type={showPassword ? "text" : "password"}
                                             placeholder="Enter your password"
                                         />
@@ -48,7 +48,7 @@ export default function ResetPassword() {
                                             {showPassword ? (
                                                 <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                                             ) : (
-                                                <EyeSlashIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                                                <EyeOff className="fill-gray-500 dark:fill-gray-400 size-5" />
                                             )}
                                         </span>
                                     </div>
@@ -59,7 +59,7 @@ export default function ResetPassword() {
                                         Confirm New Password <span className="text-error-500">*</span>{" "}
                                     </Label>
                                     <div className="relative">
-                                        <InputField
+                                        <Input
                                             type={showConfirmPassword ? "text" : "password"}
                                             placeholder="Enter your password"
                                         />
@@ -70,7 +70,7 @@ export default function ResetPassword() {
                                             {showConfirmPassword ? (
                                                 <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                                             ) : (
-                                                <EyeSlashIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                                                <EyeOff className="fill-gray-500 dark:fill-gray-400 size-5" />
                                             )}
                                         </span>
                                     </div>
