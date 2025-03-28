@@ -112,88 +112,84 @@ export default function TableListProject({ projects }) {
     return (
         <>
             <TableCard title="Project List">
-                <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-                    <div className="max-w-full overflow-x-auto">
-                        <Table>
-                            <thead className="border-b border-gray-100 dark:border-white/[0.05]">
-                                <tr>
-                                    {TABLE_HEADERS.map((name, index) => (
-                                        <th
-                                            key={index}
-                                            className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                <Table>
+                    <thead className="border-b border-gray-100 dark:border-white/[0.05]">
+                        <tr>
+                            {TABLE_HEADERS.map((name, index) => (
+                                <th
+                                    key={index}
+                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                                >
+                                    {name}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+
+                    <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                        {hasProjects ? (
+                            projects.map(project => (
+                                <tr key={project.id}>
+                                    <td className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        {project.id}
+                                    </td>
+
+                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        {projectToEdit.id === project.id ? (
+                                            <>
+                                                <div className="flex items-center gap-2 w-1/2">
+                                                    <input
+                                                        type="text"
+                                                        value={editForm.data.name}
+                                                        onChange={(e) => editForm.setData('name', e.target.value)}
+                                                        onBlur={handleOnBlur}
+                                                        onKeyDown={handleKeyDown}
+                                                        autoFocus
+                                                        className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        disabled={editForm.processing}
+                                                        maxLength={100}
+                                                        aria-label="Edit project name"
+                                                    />
+                                                    {editForm.processing && (
+                                                        <LoaderCircle className="w-5 h-5 ml-2 text-gray-500 animate-spin" aria-hidden="true" />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    {editForm.errors.name && (
+                                                        <span className="text-red-500 text-sm">{editForm.errors.name}</span>
+                                                    )}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="text-left cursor-pointer hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1 -ml-2"
+                                                onClick={() => startEditing(project)}
+                                                aria-label={`Edit ${project.name}`}
+                                            >
+                                                {project.name}
+                                            </button>
+                                        )}
+                                    </td>
+
+                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-40">
+                                        <button
+                                            type="button"
+                                            aria-label={`Delete ${project.name}`}
+                                            className={`p-1 rounded focus:outline-none focus:ring-2 focus:ring-red-500`}
+                                            onClick={() => confirmDelete(project)}
+                                            disabled={editForm.processing || deleteForm.processing}
                                         >
-                                            {name}
-                                        </th>
-                                    ))}
+                                            <Trash2 className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${editForm.processing || deleteForm.processing ? "opacity-50 cursor-not-allowed" : ""}`} />
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-
-                            <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                                {hasProjects ? (
-                                    projects.map(project => (
-                                        <tr key={project.id}>
-                                            <td className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                                {project.id}
-                                            </td>
-
-                                            <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                                {projectToEdit.id === project.id ? (
-                                                    <>
-                                                        <div className="flex items-center gap-2 w-1/2">
-                                                            <input
-                                                                type="text"
-                                                                value={editForm.data.name}
-                                                                onChange={(e) => editForm.setData('name', e.target.value)}
-                                                                onBlur={handleOnBlur}
-                                                                onKeyDown={handleKeyDown}
-                                                                autoFocus
-                                                                className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                                disabled={editForm.processing}
-                                                                maxLength={100}
-                                                                aria-label="Edit project name"
-                                                            />
-                                                            {editForm.processing && (
-                                                                <LoaderCircle className="w-5 h-5 ml-2 text-gray-500 animate-spin" aria-hidden="true" />
-                                                            )}
-                                                        </div>
-                                                        <div>
-                                                            {editForm.errors.name && (
-                                                                <span className="text-red-500 text-sm">{editForm.errors.name}</span>
-                                                            )}
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <button
-                                                        type="button"
-                                                        className="text-left cursor-pointer hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1 -ml-2"
-                                                        onClick={() => startEditing(project)}
-                                                        aria-label={`Edit ${project.name}`}
-                                                    >
-                                                        {project.name}
-                                                    </button>
-                                                )}
-                                            </td>
-
-                                            <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-40">
-                                                <button
-                                                    type="button"
-                                                    aria-label={`Delete ${project.name}`}
-                                                    className={`p-1 rounded focus:outline-none focus:ring-2 focus:ring-red-500`}
-                                                    onClick={() => confirmDelete(project)}
-                                                    disabled={editForm.processing || deleteForm.processing}
-                                                >
-                                                    <Trash2 className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${editForm.processing || deleteForm.processing ? "opacity-50 cursor-not-allowed" : ""}`} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <EmptyTableRow />
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-                </div>
+                            ))
+                        ) : (
+                            <EmptyTableRow />
+                        )}
+                    </tbody>
+                </Table>
             </TableCard>
 
             <WarningModal 
