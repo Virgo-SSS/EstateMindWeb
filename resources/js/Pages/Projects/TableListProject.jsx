@@ -8,6 +8,7 @@ import Button from "../../components/ui/button/Button";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
 import Table from "../../components/ui/table/Table";
 import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
+import TableDataCell from "../../components/ui/table/TableDataCell";
 
 const TABLE_HEADERS = ["No", "Project Name", "Action"];
 const EMPTY_PROJECT = { id: null, name: "" };
@@ -128,11 +129,11 @@ export default function TableListProject({ projects }) {
                         {hasProjects ? (
                             projects.map(project => (
                                 <tr key={project.id}>
-                                    <td className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    <TableDataCell>
                                         {project.id}
-                                    </td>
+                                    </TableDataCell>
 
-                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    <TableDataCell>
                                         {projectToEdit.id === project.id ? (
                                             <>
                                                 <div className="flex items-center gap-2 w-1/2">
@@ -168,9 +169,9 @@ export default function TableListProject({ projects }) {
                                                 {project.name}
                                             </button>
                                         )}
-                                    </td>
+                                    </TableDataCell>
 
-                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-40">
+                                    <TableDataCell>
                                         <button
                                             type="button"
                                             aria-label={`Delete ${project.name}`}
@@ -180,7 +181,7 @@ export default function TableListProject({ projects }) {
                                         >
                                             <Trash2 className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${editForm.processing || deleteForm.processing ? "opacity-50 cursor-not-allowed" : ""}`} />
                                         </button>
-                                    </td>
+                                    </TableDataCell>
                                 </tr>
                             ))
                         ) : (
