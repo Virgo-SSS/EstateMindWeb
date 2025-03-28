@@ -1,7 +1,13 @@
-import { Children } from "react";
 import { Modal } from "./Modal";
 
-export default function WarningModal({ children, isOpen, onClose, title = "Warning Alert!", message, onConfirm, confirmText = "Okay, Got It" }) {
+export default function WarningModal({ 
+    isOpen, 
+    onClose, 
+    title = "Warning Alert!", 
+    message = "Are you sure you want to proceed?",
+    confirmButton,
+    cancelButton,
+}) {
     return (
         <>
             <Modal isOpen={isOpen} onClose={onClose} className="max-w-[600px] p-5 lg:p-10">
@@ -31,7 +37,18 @@ export default function WarningModal({ children, isOpen, onClose, title = "Warni
                         </span>
                     </div>
 
-                    {children}
+                    <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-title-sm">
+                        {title}
+                    </h4>
+
+                    <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
+                        {message}
+                    </p>
+
+                    <div className="flex items-center justify-center w-full gap-3 mt-7">
+                        {cancelButton}
+                        {confirmButton}
+                    </div>
                 </div>
             </Modal>
         </>

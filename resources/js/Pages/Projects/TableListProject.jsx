@@ -2,16 +2,11 @@ import { useForm } from "@inertiajs/react";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { Trash2, LoaderCircle } from "lucide-react";
 import TableCard from "../../components/ui/table/TableCard";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHeader,
-    TableRow
-} from "../../components/ui/table/index";
 import { useModal } from "../../hooks/useModal";
 import WarningModal from "../../components/ui/modal/WarningModal";
 import Button from "../../components/ui/button/Button";
+import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
+import Table from "../../components/ui/table/Table";
 
 const TABLE_HEADERS = ["No", "Project Name", "Action"];
 const EMPTY_PROJECT = { id: null, name: "" };
@@ -119,32 +114,29 @@ export default function TableListProject({ projects }) {
             <TableCard title="Project List">
                 <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
                     <div className="max-w-full overflow-x-auto">
-                        <Table aria-label="Projects">
-                            {/* Table Header */}
-                            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-                                <TableRow>
+                        <Table>
+                            <thead className="border-b border-gray-100 dark:border-white/[0.05]">
+                                <tr>
                                     {TABLE_HEADERS.map((name, index) => (
-                                        <TableCell
+                                        <th
                                             key={index}
-                                            isHeader
                                             className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                         >
                                             {name}
-                                        </TableCell>
+                                        </th>
                                     ))}
-                                </TableRow>
-                            </TableHeader>
+                                </tr>
+                            </thead>
 
-                            {/* Table Body */}
-                            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                            <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                                 {hasProjects ? (
                                     projects.map(project => (
-                                        <TableRow key={project.id}>
-                                            <TableCell className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        <tr key={project.id}>
+                                            <td className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                                 {project.id}
-                                            </TableCell>
+                                            </td>
 
-                                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                                 {projectToEdit.id === project.id ? (
                                                     <>
                                                         <div className="flex items-center gap-2 w-1/2">
@@ -180,9 +172,9 @@ export default function TableListProject({ projects }) {
                                                         {project.name}
                                                     </button>
                                                 )}
-                                            </TableCell>
+                                            </td>
 
-                                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-40">
+                                            <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-40">
                                                 <button
                                                     type="button"
                                                     aria-label={`Delete ${project.name}`}
@@ -192,32 +184,24 @@ export default function TableListProject({ projects }) {
                                                 >
                                                     <Trash2 className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${editForm.processing || deleteForm.processing ? "opacity-50 cursor-not-allowed" : ""}`} />
                                                 </button>
-                                            </TableCell>
-                                        </TableRow>
+                                            </td>
+                                        </tr>
                                     ))
                                 ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={3} className="px-5 py-4 text-center text-gray-500 text-theme-sm dark:text-gray-400">
-                                            No projects available
-                                        </TableCell>
-                                    </TableRow>
+                                    <EmptyTableRow />
                                 )}
-                            </TableBody>
+                            </tbody>
                         </Table>
                     </div>
                 </div>
             </TableCard>
 
-            <WarningModal isOpen={isOpen} onClose={closeModal}>
-                <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-title-sm">
-                    Delete {deleteForm.data.project?.name} Project
-                </h4>
-
-                <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
-                    Are you sure you want to delete {deleteForm.data.project?.name} project? This action cannot be undone.
-                </p>
-
-                <div className="flex items-center justify-center w-full gap-3 mt-7">
+            <WarningModal 
+                isOpen={isOpen} 
+                onClose={closeModal}
+                title={`Delete ${deleteForm.data.project?.name} Project`}
+                message={`Are you sure you want to delete ${deleteForm.data.project?.name} project? This action cannot be undone.`}
+                confirmButton={
                     <Button
                         size="sm"
                         disabled={deleteForm.processing}
@@ -227,8 +211,19 @@ export default function TableListProject({ projects }) {
                         {deleteForm.processing && <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />}
                         Delete Project
                     </Button>
-                </div>
-            </WarningModal>
+                }
+                cancelButton={
+                    <Button
+                        type="button"
+                        onClick={closeModal}
+                        size="sm"
+                        disabled={deleteForm.processing}
+                        className="flex justify-center w-full px-4 py-3 text-sm font-medium text-gray-700 rounded-lg bg-gray-500 shadow-theme-xs hover:bg-gray-700 sm:w-auto"
+                    >
+                        Cancel
+                    </Button>
+                }
+            />
         </>
     );
 }
