@@ -7,6 +7,7 @@ import WarningModal from "../../components/ui/modal/WarningModal";
 import Button from "../../components/ui/button/Button";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
 import Table from "../../components/ui/table/Table";
+import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 
 const TABLE_HEADERS = ["No", "Project Name", "Action"];
 const EMPTY_PROJECT = { id: null, name: "" };
@@ -116,12 +117,9 @@ export default function TableListProject({ projects }) {
                     <thead className="border-b border-gray-100 dark:border-white/[0.05]">
                         <tr>
                             {TABLE_HEADERS.map((name, index) => (
-                                <th
-                                    key={index}
-                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                                >
+                                <TableHeaderCell key={index}>
                                     {name}
-                                </th>
+                                </TableHeaderCell>
                             ))}
                         </tr>
                     </thead>
