@@ -119,13 +119,13 @@ export default function Password() {
                                     </div>
 
                                     <div className="mt-5">
-                                            {
-                                                pageProps.flash.success && (
-                                                    <div className="text-sm text-green-500 mb-2">
-                                                        {pageProps.flash.success}
-                                                    </div>
-                                                )
-                                            }
+                                        {
+                                            pageProps.flash.success && (
+                                                <div className="text-sm text-green-500 mb-2">
+                                                    {pageProps.flash.success}
+                                                </div>
+                                            )
+                                        }
                                         <Button className="w-full" size="sm" variant="primary" type="submit" disabled={processing}>
                                             {processing ? "Updating..." : "Update Password"}
                                         </Button>

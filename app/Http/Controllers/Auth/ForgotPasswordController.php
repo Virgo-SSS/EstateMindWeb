@@ -23,7 +23,7 @@ class ForgotPasswordController extends Controller
         );
 
         return $status === Password::ResetLinkSent
-            ? redirect()->route('password.request')->with(['status' => __($status)])
+            ? redirect()->route('password.request')->with(['success' => __($status)])
             : redirect()->route('password.request')->withErrors(['email' => __($status)]);
     }
 }

@@ -7,7 +7,6 @@ class ResetPasswordDTO
     public function __construct(
         public string $email,
         public string $password,
-        public string $password_confirmation,
         public string $token
     ) {
     }
@@ -17,7 +16,6 @@ class ResetPasswordDTO
         return new self(
             email: $array['email'],
             password: $array['password'],
-            password_confirmation: $array['password_confirmation'],
             token: $array['token']
         );
     }
@@ -27,7 +25,6 @@ class ResetPasswordDTO
         return [
             'email' => $this->email,
             'password' => $this->password,
-            'password_confirmation' => $this->password_confirmation,
             'token' => $this->token
         ];
     }

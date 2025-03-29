@@ -35,7 +35,7 @@ class ForgotPasswordTest extends TestCase
         ]);
 
         $response->assertRedirect(route('password.request'));
-        $response->assertSessionHas('status', __(Password::RESET_LINK_SENT));
+        $response->assertSessionHas('success', __(Password::RESET_LINK_SENT));
         Notification::assertSentTo([$user], ResetPassword::class);
     }
 
@@ -87,7 +87,7 @@ class ForgotPasswordTest extends TestCase
         ]);
 
         $response->assertRedirect(route('password.request'));
-        $response->assertSessionHas('status', __(Password::RESET_LINK_SENT));
+        $response->assertSessionHas('success', __(Password::RESET_LINK_SENT));
         Notification::assertSentTo([$user], ResetPassword::class);
 
         // tring to send another reset password link after the first one
