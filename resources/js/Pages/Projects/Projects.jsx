@@ -14,13 +14,27 @@ export default function Projects({ projects }) {
         name: "",
     });
 
-    const handleSave = () => {
+    const handleSave = (e) => {
+        e.preventDefault();
+
+        if(!data.name) {
+            errors.name = "Project name is required";
+            setData("name", "");
+            return;
+        }
+
         post(route("project.store"), {
             onSuccess: () => {
                 reset();
                 closeModal();
             }
         });
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleSave(e);
+        }
     }
 
     const handleModalClose = () => {
@@ -62,7 +76,7 @@ export default function Projects({ projects }) {
                         </p>
                     </div>
 
-                    <form className="flex flex-col">
+                    <form className="flex flex-col" onSubmit={handleSave} onKeyDown={handleKeyDown}>
                         <div className="h-[80px] px-2 pb-3">
                             <div className="mb-4">
                                 <Label htmlFor="projectName">
@@ -85,7 +99,7 @@ export default function Projects({ projects }) {
                                 Close
                             </Button>
 
-                            <Button size="sm" onClick={handleSave} disabled={processing}>
+                            <Button size="sm" type="submit" disabled={processing}>
                                 {processing && (
                                     <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />
                                 )}

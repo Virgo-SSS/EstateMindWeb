@@ -15,6 +15,10 @@ export const Modal = ({
             if (event.key === "Escape") {
                 onClose()
             }
+
+            if (event.key === "Enter") {
+                event.preventDefault()
+            }
         }
 
         if (isOpen) {
