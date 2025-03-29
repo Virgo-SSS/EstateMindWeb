@@ -14,6 +14,7 @@ import TableCardFooter from "../../components/ui/table/TableCardFooter";
 import TableCardBody from "../../components/ui/table/TableCardBody";
 import { Search } from "lucide-react";
 import Input from "../../components/ui/input/Input";
+import { useDebouncedCallback } from "use-debounce";
 
 const TABLE_HEADERS = ["No", "Project Name", "Action"];
 const EMPTY_PROJECT = { id: null, name: "" };
@@ -21,6 +22,8 @@ const EMPTY_PROJECT = { id: null, name: "" };
 export default function TableListProject({ projects }) {
     const [projectToEdit, setProjectToEdit] = useState(EMPTY_PROJECT);
     const { isOpen, openModal, closeModal } = useModal();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filteredProjects, setFilteredProjects] = useState(projects);
 
     const editForm = useForm({
         name: "",
@@ -30,13 +33,38 @@ export default function TableListProject({ projects }) {
         project: null,
     });
 
-    // Reset edit form when component unmounts
     useEffect(() => {
         return () => {
             editForm.reset();
             deleteForm.reset();
         };
     }, []);
+
+    useEffect(() => {
+        setFilteredProjects(projects);
+    }, [projects]);
+
+
+    // Add debounced search function to prevent excessive filtering
+    const debouncedSearch = useDebouncedCallback((query) => {
+        if (!query.trim()) {
+            setFilteredProjects(projects);
+            return;
+        }
+        
+        const lowercaseQuery = query.toLowerCase().trim();
+        const filtered = projects.filter(project => 
+            project.name.toLowerCase().includes(lowercaseQuery)
+        );
+        
+        setFilteredProjects(filtered);
+    }, 1000);
+
+    const handleLiveSearch = useCallback((e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+        debouncedSearch(query);
+    }, [debouncedSearch, projects]);
 
     // Handlers with useCallback for better performance
     const cancelEditing = useCallback(() => {
@@ -114,7 +142,7 @@ export default function TableListProject({ projects }) {
     }, [deleteForm, closeModal]);
 
     // Memoized empty state check
-    const hasProjects = useMemo(() => projects && projects.length > 0, [projects]);
+    const hasProjects = useMemo(() => filteredProjects && filteredProjects.length > 0, [filteredProjects]);
 
     return (
         <>
@@ -125,9 +153,13 @@ export default function TableListProject({ projects }) {
                     </div>
                     <div>
                         <Input
+                            id="search"
+                            name="search"
                             placeholder={"Search project..."}
                             icon={<Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
                             iconPosition="left"
+                            onChange={handleLiveSearch}
+                            value={searchQuery}
                         />
                     </div>
                 </TableCardHeader>
@@ -145,7 +177,7 @@ export default function TableListProject({ projects }) {
 
                         <tbody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                             {hasProjects ? (
-                                projects.map(project => (
+                                filteredProjects.map(project => (
                                     <tr key={project.id}>
                                         <TableDataCell>
                                             {project.id}
@@ -203,7 +235,9 @@ export default function TableListProject({ projects }) {
                                     </tr>
                                 ))
                             ) : (
-                                <EmptyTableRow />
+                                <EmptyTableRow 
+                                    message={searchQuery ? "No projects match your search" : "No projects available"} 
+                                />
                             )}
                         </tbody>
                     </Table>
