@@ -33,11 +33,11 @@ export default function Checkbox({
                         fill="none"
                     >
                         <path
-                        d="M11.6666 3.5L5.24992 9.91667L2.33325 7"
-                        stroke="white"
-                        strokeWidth="1.94437"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                            d="M11.6666 3.5L5.24992 9.91667L2.33325 7"
+                            stroke="white"
+                            strokeWidth="1.94437"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                         />
                     </svg>
                 )}
@@ -52,11 +52,11 @@ export default function Checkbox({
                         fill="none"
                     >
                         <path
-                        d="M11.6666 3.5L5.24992 9.91667L2.33325 7"
-                        stroke="#E4E7EC"
-                        strokeWidth="2.33333"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                            d="M11.6666 3.5L5.24992 9.91667L2.33325 7"
+                            stroke="#E4E7EC"
+                            strokeWidth="2.33333"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                         />
                     </svg>
                 )}

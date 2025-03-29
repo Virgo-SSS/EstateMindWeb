@@ -12,7 +12,10 @@ export default function Input({
     disabled = false,
     success = false,
     error = false,
-    hint
+    hint,
+    icon,
+    iconOnClick,
+    isRequired = false,
 }) {
     let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`
 
@@ -27,20 +30,34 @@ export default function Input({
     }
 
     return (
-        <div className="relative">
-            <input
-                type={type}
-                id={id}
-                name={name}
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-                min={min}
-                max={max}
-                step={step}
-                disabled={disabled}
-                className={inputClasses}
-            />
+        <>
+            <div className="relative">
+                <div className="relative">
+                    <input
+                        type={type}
+                        id={id}
+                        name={name}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={onChange}
+                        min={min}
+                        max={max}
+                        step={step}
+                        disabled={disabled}
+                        className={inputClasses}
+                        required={isRequired}
+                    />
+                </div>
+                
+                {icon && ( 
+                    <span
+                        onClick={iconOnClick}
+                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    >
+                        {icon}
+                    </span>
+                )}
+            </div>
 
             {hint && (
                 <p
@@ -55,6 +72,6 @@ export default function Input({
                     {hint}
                 </p>
             )}
-        </div>
+        </>
     )
 }

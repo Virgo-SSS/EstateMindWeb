@@ -1,7 +1,7 @@
 import AuthLayout from "../../layout/AuthLayout"
 import { useState } from "react"
 import { Link, useForm } from "@inertiajs/react"
-import Checkbox from "../../components/form/input/Checkbox"
+import Checkbox from "../../components/ui/input/Checkbox"
 import Button from "../../components/ui/button/Button"
 import Input from "../../components/ui/input/Input"
 import { EyeIcon, EyeOff } from "lucide-react"
@@ -9,7 +9,6 @@ import Label from "../../components/ui/label/Label"
 
 export default function Login() {   
     const [showPassword, setShowPassword] = useState(false)
-    const [isChecked, setIsChecked] = useState(false)
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
@@ -19,6 +18,25 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        if(!data.email || !data.password) {
+            // Show error message if email or password is empty
+            if(!data.email) {
+                errors.email = "Email is required"
+            }
+            
+            if(!data.password) {
+                errors.password = "Password is required"
+            }
+
+            // render the form again with errors
+            setData({
+                ...data,
+                email: data.email,
+                password: data.password,
+            })
+            return
+        }
         
         post(route('login.attempt'), {
             onFinish: () => reset('password'),
@@ -60,6 +78,7 @@ export default function Login() {
                                         onChange={(e) => setData("email", e.target.value)} 
                                         error={errors.email ? true : false}
                                         hint={errors.email}
+                                        isRequired={true}
                                     />
                                 </div>
 
@@ -67,36 +86,29 @@ export default function Login() {
                                     <Label htmlFor={"password"}>
                                         Password <span className="text-error-500">*</span>{" "}
                                     </Label>
-                                    <div className="relative">
-                                        <Input
-                                            id="password"
-                                            placeholder="Enter your password"
-                                            type={showPassword ? "text" : "password"}
-                                            value={data.password}
-                                            onChange={(e) => setData("password", e.target.value)}
-                                            error={errors.password ? true : false}
-                                            hint={errors.password}
-                                        />
-
-                                        <span
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                                        >
-                                            {showPassword ? (
-                                                <EyeIcon className="dark:text-white" />
-                                            ) : (
-                                                <EyeOff className="dark:text-white" />
-                                            )}
-                                        </span>
-                                    </div>
+                                    <Input
+                                        id="password"
+                                        placeholder="Enter your password"
+                                        type={showPassword ? "text" : "password"}
+                                        value={data.password}
+                                        onChange={(e) => setData("password", e.target.value)}
+                                        error={errors.password ? true : false}
+                                        hint={errors.password}
+                                        icon={showPassword ? (
+                                            <EyeIcon className="dark:text-white" />
+                                        ) : (
+                                            <EyeOff className="dark:text-white" />
+                                        )}
+                                        iconOnClick={() => setShowPassword(!showPassword)}
+                                        isRequired={true}
+                                    />
                                 </div>
 
                                 <div className="flex items-center justify-between mb-8">
                                     <div className="flex items-center gap-3">
-                                        <Checkbox 
-                                            checked={isChecked} 
+                                        <Checkbox
+                                            checked={data.remember}
                                             onChange={(value) => {
-                                                setIsChecked(value)
                                                 setData("remember", value)
                                             }}
                                             id="remember"
