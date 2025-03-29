@@ -123,18 +123,12 @@ export default function TableListProject({ projects }) {
                     <div>
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Project Lists</h3>
                     </div>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <div className="relative">
-                            <Input 
-                                placeholder={"Search project..."}
-                                className="pl-11 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
-                                error={true}
-                                hint="Search project error"
-                            />
-                            <span class="absolute text-gray-500 -translate-y-1/2 pointer-events-none left-4 top-1/2 dark:text-gray-400">
-                                <Search className="w-4 h-4" aria-hidden="true" />
-                            </span>
-                        </div>
+                    <div>
+                        <Input
+                            placeholder={"Search project..."}
+                            icon={<Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
+                            iconPosition="left"
+                        />
                     </div>
                 </TableCardHeader>
                 <TableCardBody>

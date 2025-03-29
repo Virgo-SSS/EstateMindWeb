@@ -12,10 +12,11 @@ export default function Input({
     disabled = false,
     success = false,
     error = false,
+    isRequired = false,
     hint,
     icon,
     iconOnClick,
-    isRequired = false,
+    iconPosition = "right",
 }) {
     let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`
 
@@ -27,6 +28,10 @@ export default function Input({
         inputClasses += `  border-success-500 focus:border-success-300 focus:ring-success-500/20 dark:text-success-400 dark:border-success-500 dark:focus:border-success-800`
     } else {
         inputClasses += ` bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800`
+    }
+
+    if (iconPosition === "left") {
+        inputClasses += ` pl-11`
     }
 
     return (
@@ -52,7 +57,8 @@ export default function Input({
                 {icon && ( 
                     <span
                         onClick={iconOnClick}
-                        className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                        className={`absolute z-30 -translate-y-1/2 cursor-pointer ${iconPosition}-4 top-1/2 dark:text-gray-400`}
+                        data-discover="true"
                     >
                         {icon}
                     </span>
