@@ -24,6 +24,7 @@ class ProjectController extends Controller
     public function store(ProjectStoreRequest $request): RedirectResponse
     {
         Project::query()->create(['name' => $request->name]);
+        Cache::forget('projects');
 
         return redirect()->route('project.index')->with('success', 'Project created successfully.');
     }
@@ -31,6 +32,7 @@ class ProjectController extends Controller
     public function update(ProjectUpdateRequest $request, Project $project): RedirectResponse
     {
         $project->update(['name' => $request->name]);
+        Cache::forget('projects');
 
         return redirect()->route('project.index')->with('success', 'Project updated successfully.');
     }
@@ -38,6 +40,7 @@ class ProjectController extends Controller
     public function destroy(Project $project): RedirectResponse
     {
         $project->delete();
+        Cache::forget('projects');
 
         return redirect()->route('project.index')->with('success', 'Project deleted successfully.');
     }
