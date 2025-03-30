@@ -10,6 +10,7 @@ use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,7 +19,9 @@ class UserController extends Controller
     public function index(): Response
     {
         return Inertia::render('Users/Users', [
-            'users' => User::all(),
+            'users' => Cache::remember('users', 12 * 60 * 60, function () {
+                return User::query()->get();
+            }),
         ]);
     }
 
