@@ -57,7 +57,7 @@ export default function Input({
                 {icon && ( 
                     <span
                         onClick={iconOnClick}
-                        className={`absolute z-30 -translate-y-1/2 cursor-pointer ${iconPosition}-4 top-1/2 dark:text-gray-400`}
+                        className={`absolute z-30 -translate-y-1/2 cursor-pointer ${iconPosition + '-4' } top-1/2 dark:text-gray-400`}
                         data-discover="true"
                     >
                         {icon}

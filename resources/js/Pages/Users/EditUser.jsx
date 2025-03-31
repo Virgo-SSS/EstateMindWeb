@@ -1,7 +1,188 @@
-export default function EditUser() {
+import { EyeIcon, EyeOff, LoaderCircle } from "lucide-react";
+import Input from "../../components/ui/input/Input";
+import Label from "../../components/ui/label/Label";
+import AppLayout from "../../layout/AppLayout"
+import Select from "../../components/ui/input/Select";
+import Button from "../../components/ui/button/Button";
+import { Link, useForm } from "@inertiajs/react";
+import { useMemo, useState } from "react";
+
+export default function EditUser({ user }) {
+    const [ showPassword, setShowPassword ] = useState(false)
+    const { data, setData, put, processing, errors, reset } = useForm({
+        name: user.name,
+        email: user.email,
+        password: "",
+        is_super_admin: user.is_super_admin ? 1 : 0,
+    })
+
+    const roleOptions = useMemo(() => [
+        { label: "Select Role", value: "", disabled: true },
+        { label: "Super Admin", value: 1 },
+        { label: "Admin", value: 0 },
+    ], []);
+
+    const handleSave = (e) => {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            setData({...data})
+            return;
+        }
+
+        put(route("users.update", user.id), {
+            onSuccess: () => {
+                reset();
+            },
+            onError: (errors) => {
+                // TODO: Handle error case (e.g., show a toast notification)
+                console.error("Failed to update project:", errors);
+            }
+        });
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (errors[name]) {
+            delete errors[name];
+        }
+
+        if (name === "is_super_admin") {
+            setData(name, parseInt(value));
+            return;
+        }
+        setData(name, value);
+    }
+
+    const validateForm = () => {
+        const validationRules = {
+            name: (value) => value.trim() !== "" || "Name is required",
+            email: (value) => value.trim() !== "" || "Email is required",
+            is_super_admin: (value) => [0, 1].includes(value) || "Invalid role selection",
+        };
+
+        let isValid = true;
+        Object.entries(validationRules).forEach(([field, rule]) => {
+            const errorMessage = rule(data[field]);
+            if (errorMessage !== true) {
+                errors[field] = errorMessage;
+                isValid = false;
+            } else {
+                delete errors[field];
+            }
+        });
+        
+        return isValid;
+    };
+
     return (
-        <div>
-            <h1>Edit User</h1>
-        </div>
+        <>
+            <AppLayout>
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                    <Link
+                        href={route("users.index")}
+                        className="text-xl font-semibold text-gray-800 dark:text-white/90"
+                    >
+                        Users
+                    </Link>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                    <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] w-2/3">
+                        <div className="px-6 py-5">
+                            <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+                                Update User {user.name}
+                            </h3>
+                        </div>
+                        <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+                            <div className="space-y-6">
+                                <form onSubmit={handleSave}>
+                                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                        <div>
+                                            <Label htmlFor="name">
+                                                Name <span className="text-error-500">*</span>{" "}
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                name="name"
+                                                placeholder="Name"
+                                                isRequired={true}
+                                                value={data.name}
+                                                onChange={handleChange}
+                                                error={errors.name ? true : false}
+                                                hint={errors.name}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="email">
+                                                Email <span className="text-error-500">*</span>{" "}
+                                            </Label>
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                name="email"
+                                                isRequired={true}
+                                                placeholder="Email address"
+                                                value={data.email}
+                                                onChange={handleChange}
+                                                error={errors.email ? true : false}
+                                                hint={errors.email}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="password">
+                                                Password
+                                            </Label>
+                                            <Input
+                                                id="password"
+                                                name="password"
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Password"
+                                                icon={showPassword ? (
+                                                    <EyeIcon className="dark:text-white" />
+                                                ) : (
+                                                    <EyeOff className="dark:text-white" />
+                                                )}
+                                                iconOnClick={() => setShowPassword(!showPassword)}
+                                                value={data.password}
+                                                onChange={handleChange}
+                                                error={errors.password ? true : false}
+                                                hint={errors.password}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="is_super_admin">
+                                                Role <span className="text-error-500">*</span>{" "}
+                                            </Label>
+                                            <Select
+                                                id="is_super_admin"
+                                                name="is_super_admin"
+                                                required={true}
+                                                placeholder="Role"
+                                                options={roleOptions}
+                                                value={data.is_super_admin}
+                                                onChange={handleChange}
+                                                error={errors.is_super_admin ? true : false}
+                                                hint={errors.is_super_admin}
+                                            />
+                                        </div>
+                                        <div className="col-span-full">
+                                            <Button
+                                                size="sm"
+                                                disabled={processing}
+                                            >
+                                                {processing && (
+                                                    <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />
+                                                )}
+                                                Update User
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </AppLayout>
+        </>
     );
 }

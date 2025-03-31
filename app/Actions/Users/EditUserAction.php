@@ -5,6 +5,7 @@ namespace App\Actions\Users;
 use App\ActionContracts\Users\EditUserActionInterface;
 use App\DataTransferObjects\Users\EditUserDTO;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class EditUserAction implements EditUserActionInterface
@@ -22,5 +23,7 @@ class EditUserAction implements EditUserActionInterface
         }
 
         $user->update($newData);
+
+        Cache::forget('users');
     }
 }

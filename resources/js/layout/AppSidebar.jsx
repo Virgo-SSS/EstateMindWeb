@@ -30,7 +30,7 @@ const navItems = [
 const AppSidebar = () => {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
     const { url } = usePage()
-    const fullUrl = route(route().current())
+    const fullUrl = route(route().current(), route().params)
 
     const [openSubmenu, setOpenSubmenu] = useState(null)
     const [subMenuHeight, setSubMenuHeight] = useState({})
