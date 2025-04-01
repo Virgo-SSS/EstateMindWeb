@@ -12,14 +12,14 @@ export default function EditUser({ user }) {
     const { data, setData, put, processing, errors, reset } = useForm({
         name: user.name,
         email: user.email,
+        role: user.role,
         password: "",
-        is_super_admin: user.is_super_admin ? 1 : 0,
     })
 
     const roleOptions = useMemo(() => [
         { label: "Select Role", value: "", disabled: true },
         { label: "Super Admin", value: 1 },
-        { label: "Admin", value: 0 },
+        { label: "Admin", value: 2 },
     ], []);
 
     const handleSave = (e) => {
@@ -46,34 +46,24 @@ export default function EditUser({ user }) {
         if (errors[name]) {
             delete errors[name];
         }
-
-        if (name === "is_super_admin") {
-            setData(name, parseInt(value));
-            return;
-        }
         setData(name, value);
     }
 
     const validateForm = () => {
-        const validationRules = {
-            name: (value) => value.trim() !== "" || "Name is required",
-            email: (value) => value.trim() !== "" || "Email is required",
-            is_super_admin: (value) => [0, 1].includes(value) || "Invalid role selection",
-        };
+        const requiredFields = ["name", "email", "role"];
+        let allFieldsFilled = true;
 
-        let isValid = true;
-        Object.entries(validationRules).forEach(([field, rule]) => {
-            const errorMessage = rule(data[field]);
-            if (errorMessage !== true) {
-                errors[field] = errorMessage;
-                isValid = false;
+        requiredFields.forEach(field => {
+            if (!data[field]) {
+                errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+                allFieldsFilled = false;
             } else {
                 delete errors[field];
             }
         });
-        
-        return isValid;
-    };
+
+        return allFieldsFilled;
+    }
 
     return (
         <>
@@ -150,19 +140,19 @@ export default function EditUser({ user }) {
                                             />
                                         </div>
                                         <div>
-                                            <Label htmlFor="is_super_admin">
+                                            <Label htmlFor="role">
                                                 Role <span className="text-error-500">*</span>{" "}
                                             </Label>
                                             <Select
-                                                id="is_super_admin"
-                                                name="is_super_admin"
+                                                id="role"
+                                                name="role"
                                                 required={true}
                                                 placeholder="Role"
                                                 options={roleOptions}
-                                                value={data.is_super_admin}
+                                                value={data.role}
                                                 onChange={handleChange}
-                                                error={errors.is_super_admin ? true : false}
-                                                hint={errors.is_super_admin}
+                                                error={errors.role ? true : false}
+                                                hint={errors.role}
                                             />
                                         </div>
                                         <div className="col-span-full">

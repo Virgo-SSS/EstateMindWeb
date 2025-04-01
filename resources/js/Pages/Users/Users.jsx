@@ -58,7 +58,7 @@ export default function Users({ users }) {
                                         placeholder="Filter by Role"
                                         options={[
                                             { label: "Super Admin", value: 1 },
-                                            { label: "Admin", value: 0 },
+                                            { label: "Admin", value: 2 },
                                         ]}
                                     />
                                     <Button
@@ -86,12 +86,13 @@ export default function Users({ users }) {
                                     {
                                         hasUsers ? (
                                             users.map((user, index) => (
+                                                console.log(user),
                                                 <tr key={user.id}>
                                                     <TableDataCell>{index + 1}</TableDataCell>
                                                     <TableDataCell>{user.name}</TableDataCell>
                                                     <TableDataCell>{user.email}</TableDataCell>
                                                     <TableDataCell>
-                                                        {user.is_super_admin ? "Super Admin" : "Admin"}
+                                                        {user.role === 1 ? "Super Admin" : "Admin"}
                                                     </TableDataCell>
                                                     <TableDataCell>
                                                         <Link href={route("users.edit", user.id)}>

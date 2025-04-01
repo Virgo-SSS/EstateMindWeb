@@ -14,22 +14,21 @@ export default function CreateUser() {
         name: "",
         email: "",
         password: "",
-        is_super_admin: "",
+        role: "",
     });
+
+    const roleOptions = useMemo(() => [
+        { label: "Select Role", value: "", disabled: true },
+        { label: "Super Admin", value: 1 },
+        { label: "Admin", value: 2 },
+    ], []);
 
     const handleSave = (e) => {
         e.preventDefault();
 
-        if (!checkRequiredFields()) {
-            setData({
-                ...data,
-                name: data.name,
-                email: data.email,
-                password: data.password,
-                is_super_admin: data.is_super_admin,
-            })
-            
-            return;
+        if (!validateForm()) {
+            setData({...data})
+            return
         }
 
         post(route("users.store"), {
@@ -51,18 +50,13 @@ export default function CreateUser() {
         setData(name, value);
     }
 
-    const checkRequiredFields = () => {
-        const requiredFields = ["name", "email", "password", "is_super_admin"];
+    const validateForm = () => {
+        const requiredFields = ["name", "email", "password", "role"];
         let allFieldsFilled = true;
 
         requiredFields.forEach(field => {
             if (!data[field]) {
-                let errorMessage = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
-                if(field === "is_super_admin") {
-                    errorMessage = "Role is required";
-                }
-
-                errors[field] = errorMessage;
+                errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
                 allFieldsFilled = false;
             } else {
                 delete errors[field];
@@ -148,23 +142,19 @@ export default function CreateUser() {
                                             />
                                         </div>
                                         <div>
-                                            <Label htmlFor="is_super_admin">
+                                            <Label htmlFor="role">
                                                 Role <span className="text-error-500">*</span>{" "}
                                             </Label>
                                             <Select
-                                                id="is_super_admin"
-                                                name="is_super_admin"
+                                                id="role"
+                                                name="role"
                                                 required={true}
                                                 placeholder="Role"
-                                                options={[
-                                                    { label: "Select Role", value: "", disabled: true },
-                                                    { label: "Super Admin", value: 1 },
-                                                    { label: "Admin", value: 0 },
-                                                ]}
-                                                value={data.is_super_admin}
+                                                options={roleOptions}
+                                                value={data.role}
                                                 onChange={handleChange}
-                                                error={errors.is_super_admin ? true : false}
-                                                hint={errors.is_super_admin}
+                                                error={errors.role ? true : false}
+                                                hint={errors.role}
                                             />
                                         </div>
                                         <div className="col-span-full">
