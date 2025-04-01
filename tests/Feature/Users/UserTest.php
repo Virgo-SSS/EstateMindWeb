@@ -10,9 +10,9 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_auth_user_can_access_users_page(): void
+    public function test_super_admin_can_access_users_page(): void
     {
-        $this->nonSuperAdmin();
+        $this->superAdmin();
 
         $response = $this->get(route('users.index'));
 
@@ -22,6 +22,15 @@ class UserTest extends TestCase
                 ->component('Users/Users')
                 ->has('users')
         );
+    }
+
+    public function test_non_super_admin_cannot_access_users_page(): void
+    {
+        $this->nonSuperAdmin();
+
+        $response = $this->get(route('users.index'));
+
+        $response->assertStatus(403);
     }
 
     public function test_guest_can_not_access_users_page(): void

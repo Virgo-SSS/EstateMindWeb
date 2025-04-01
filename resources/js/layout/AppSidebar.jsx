@@ -4,38 +4,40 @@ import { useSidebar } from "../context/SidebarContext"
 import SidebarWidget from "./SidebarWidget"
 import { ChevronDown, Coins, FolderKanban, LayoutGrid, UserCog } from "lucide-react"
 
-const navItems = [
-    {
-        icon: <LayoutGrid />,
-        name: "Dashboard",
-        path: route("dashboard"),
-    },
-    {
-        icon: <UserCog />,
-        name: "Users",
-        path: route("users.index"),
-    },
-    {
-        icon: <Coins />,
-        name: "Sales",
-        path: route("sales.index"),
-    },
-    {
-        icon: <FolderKanban />,
-        name: "Projects",
-        path: route("project.index"),
-    }
-]
-
 const AppSidebar = () => {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
-    const { url } = usePage()
+    const { url, props: pageProps } = usePage()
     const fullUrl = route(route().current(), route().params)
 
     const [openSubmenu, setOpenSubmenu] = useState(null)
     const [subMenuHeight, setSubMenuHeight] = useState({})
     const subMenuRefs = useRef({})
-
+    const navItems = [
+        {
+            icon: <LayoutGrid />,
+            name: "Dashboard",
+            path: route("dashboard"),
+            hide: false,
+        },
+        {
+            icon: <UserCog />,
+            name: "Users",
+            path: route("users.index"),
+            hide: pageProps.auth.user.role === 2,
+        },
+        {
+            icon: <Coins />,
+            name: "Sales",
+            path: route("sales.index"),
+            hide: false,
+        },
+        {
+            icon: <FolderKanban />,
+            name: "Projects",
+            path: route("project.index"),
+            hide: false,
+        }
+    ]
     const isActive = useCallback((path) => {
         return fullUrl === path
     }, [fullUrl])
@@ -89,6 +91,9 @@ const AppSidebar = () => {
     const renderMenuItems = (items) => (
         <ul className="flex flex-col gap-4">
             {items.map((nav, index) => (
+                nav.hide 
+                ? null 
+                :
                 <li key={nav.name}>
 
                     {/* Parent Menu */}
