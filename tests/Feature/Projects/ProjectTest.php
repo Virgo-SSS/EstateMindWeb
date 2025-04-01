@@ -12,7 +12,7 @@ class ProjectTest extends TestCase
 
     public function test_guest_can_not_view_projects(): void
     {
-        $response = $this->get(route('project.index'));
+        $response = $this->get(route('projects.index'));
 
         $response->assertRedirect('/login');
     }
@@ -21,7 +21,7 @@ class ProjectTest extends TestCase
     {
         $this->nonSuperAdmin();
 
-        $response = $this->get(route('project.index'));
+        $response = $this->get(route('projects.index'));
 
         $response->assertStatus(200);
         $response->assertInertia(

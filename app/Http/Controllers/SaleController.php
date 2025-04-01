@@ -10,6 +10,7 @@ use App\Http\Requests\Sales\SaleUpdateRequest;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,7 +19,12 @@ class SaleController extends Controller
     public function index(): Response
     {
         return Inertia::render('Sales/Sales', [
-            'sales' => Sale::query()->get()
+            'sales' => Cache::remember('sales', 60 * 60 * 12, function () {
+                return Sale::query()
+                    ->with(['project'])
+                    ->latest()
+                    ->get();
+            }),
         ]);
     }
 

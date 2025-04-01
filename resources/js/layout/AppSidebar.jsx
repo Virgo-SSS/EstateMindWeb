@@ -34,7 +34,7 @@ const AppSidebar = () => {
         {
             icon: <FolderKanban />,
             name: "Projects",
-            path: route("project.index"),
+            path: route("projects.index"),
             hide: false,
         }
     ]

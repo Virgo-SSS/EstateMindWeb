@@ -14,7 +14,7 @@ class DeleteProjectTest extends TestCase
     {
         $project = Project::factory()->create();
 
-        $response = $this->delete(route('project.destroy', $project));
+        $response = $this->delete(route('projects.destroy', $project));
 
         $response->assertRedirect(route('login'));
     }
@@ -25,9 +25,9 @@ class DeleteProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->delete(route('project.destroy', $project));
+        $response = $this->delete(route('projects.destroy', $project));
 
-        $response->assertRedirect(route('project.index'));
+        $response->assertRedirect(route('projects.index'));
         $response->assertStatus(302);
         $response->assertSessionHas('success', 'Project deleted successfully.');
         $this->assertDatabaseMissing('projects', $project->toArray());

@@ -39,10 +39,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
-    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
-    Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
-    Route::put('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
-    Route::delete('/project/{project}', [ProjectController::class, 'destroy'])->name('project.destroy');
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::post('/project', [ProjectController::class, 'store'])->name('projects.store');
+    Route::put('/project/{project}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/project/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
     Route::get('/sales/create', [SaleController::class, 'create'])->name('sales.create');

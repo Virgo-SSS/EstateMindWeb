@@ -14,7 +14,7 @@ class EditProjectTest extends TestCase
     {
         $project = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project));
+        $response = $this->put(route('projects.update', $project));
 
         $response->assertRedirect(route('login'));
     }
@@ -25,11 +25,11 @@ class EditProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project), [
+        $response = $this->put(route('projects.update', $project), [
             'name' => 'New Project Name',
         ]);
 
-        $response->assertRedirect(route('project.index'));
+        $response->assertRedirect(route('projects.index'));
         $response->assertSessionHas('success', 'Project updated successfully.');
 
         $this->assertDatabaseHas('projects', [
@@ -47,7 +47,7 @@ class EditProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project), [
+        $response = $this->put(route('projects.update', $project), [
             'name' => '',
         ]);
 
@@ -60,7 +60,7 @@ class EditProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project), [
+        $response = $this->put(route('projects.update', $project), [
             'name' => 123,
         ]);
 
@@ -73,7 +73,7 @@ class EditProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project), [
+        $response = $this->put(route('projects.update', $project), [
             'name' => str_repeat('a', 256),
         ]);
 
@@ -87,7 +87,7 @@ class EditProjectTest extends TestCase
         $project = Project::factory()->create();
         $project2 = Project::factory()->create();
 
-        $response = $this->put(route('project.update', $project), [
+        $response = $this->put(route('projects.update', $project), [
             'name' => $project2->name,
         ]);
 

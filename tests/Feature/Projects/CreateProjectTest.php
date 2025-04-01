@@ -12,7 +12,7 @@ class CreateProjectTest extends TestCase
 
     public function test_guest_cannot_create_project(): void
     {
-        $response = $this->post(route('project.store'));
+        $response = $this->post(route('projects.store'));
 
         $response->assertRedirect(route('login'));
     }
@@ -21,11 +21,11 @@ class CreateProjectTest extends TestCase
     {
         $this->nonSuperAdmin();
 
-        $response = $this->post(route('project.store'), [
+        $response = $this->post(route('projects.store'), [
             'name' => 'Project name',
         ]);
 
-        $response->assertRedirect(route('project.index'));
+        $response->assertRedirect(route('projects.index'));
         $response->assertSessionHas('success', 'Project created successfully.');
 
         $this->assertDatabaseHas('projects', [
@@ -37,7 +37,7 @@ class CreateProjectTest extends TestCase
     {
         $this->nonSuperAdmin();
 
-        $response = $this->post(route('project.store'), [
+        $response = $this->post(route('projects.store'), [
             'name' => '',
         ]);
 
@@ -50,7 +50,7 @@ class CreateProjectTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $response = $this->post(route('project.store'), [
+        $response = $this->post(route('projects.store'), [
             'name' => $project->name,
         ]);
 
@@ -61,7 +61,7 @@ class CreateProjectTest extends TestCase
     {
         $this->nonSuperAdmin();
 
-        $response = $this->post(route('project.store'), [
+        $response = $this->post(route('projects.store'), [
             'name' => str_repeat('a', 256),
         ]);
 
@@ -72,7 +72,7 @@ class CreateProjectTest extends TestCase
     {
         $this->nonSuperAdmin();
 
-        $response = $this->post(route('project.store'), [
+        $response = $this->post(route('projects.store'), [
             'name' => 123,
         ]);
 

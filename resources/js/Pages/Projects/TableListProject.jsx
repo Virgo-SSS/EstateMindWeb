@@ -86,7 +86,7 @@ export default function TableListProject({ projects }) {
             return;
         }
 
-        editForm.put(route("project.update", projectToEdit.id), {
+        editForm.put(route("projects.update", projectToEdit.id), {
             onSuccess: cancelEditing,
             onError: (errors) => {
                 // TODO: Handle error case (e.g., show a toast notification)
@@ -129,7 +129,7 @@ export default function TableListProject({ projects }) {
             return;
         }
 
-        deleteForm.delete(route("project.destroy", deleteForm.data.project.id), {
+        deleteForm.delete(route("projects.destroy", deleteForm.data.project.id), {
             onSuccess: () => {
                 closeModal();
                 deleteForm.reset();

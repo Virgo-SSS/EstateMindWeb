@@ -23,7 +23,7 @@ export default function Projects({ projects }) {
             return;
         }
 
-        post(route("project.store"), {
+        post(route("projects.store"), {
             onSuccess: () => {
                 reset();
                 closeModal();

@@ -26,7 +26,7 @@ class ProjectController extends Controller
         Project::query()->create(['name' => $request->name]);
         Cache::forget('projects');
 
-        return redirect()->route('project.index')->with('success', 'Project created successfully.');
+        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
 
     public function update(ProjectUpdateRequest $request, Project $project): RedirectResponse
@@ -34,7 +34,7 @@ class ProjectController extends Controller
         $project->update(['name' => $request->name]);
         Cache::forget('projects');
 
-        return redirect()->route('project.index')->with('success', 'Project updated successfully.');
+        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project): RedirectResponse
@@ -42,6 +42,6 @@ class ProjectController extends Controller
         $project->delete();
         Cache::forget('projects');
 
-        return redirect()->route('project.index')->with('success', 'Project deleted successfully.');
+        return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }
 }
