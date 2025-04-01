@@ -1,7 +1,7 @@
-import { CopyPlus, Pencil, Search, Trash2 } from "lucide-react";
+import { CopyPlus, LoaderCircle, Pencil, Search, Trash2 } from "lucide-react";
 import Button from "../../components/ui/button/Button";
 import AppLayout from "../../layout/AppLayout";
-import { Link } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import Table from "../../components/ui/table/Table";
 import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 import TableDataCell from "../../components/ui/table/TableDataCell";
@@ -12,8 +12,44 @@ import TableHeader from "../../components/ui/table/TableHeader";
 import Input from "../../components/ui/input/Input";
 import Select from "../../components/ui/input/Select";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
+import WarningModal from "../../components/ui/modal/WarningModal";
+import { useModal } from "../../hooks/useModal";
+import { useCallback } from "react";
 
 export default function Users({ users }) {
+    const { isOpen, openModal, closeModal } = useModal()
+    
+    const deleteForm = useForm({
+        user: null,
+    });
+    
+    const confirmDelete = useCallback((user) => {
+        deleteForm.setData("user", user);
+        openModal();
+    }, [deleteForm, openModal]);
+
+    const handleDelete = useCallback((e) => {
+        e.preventDefault();
+        
+        if (!deleteForm.data.user?.id) {
+            // TODO: Handle error case (e.g., show a toast notification)
+            console.error("No user selected for deletion.");
+            closeModal();
+            return;
+        }
+
+        deleteForm.delete(route("users.destroy", deleteForm.data.user.id), {
+            onSuccess: () => {
+                closeModal();
+                deleteForm.reset();
+            },
+            onError: (errors) => {
+                // TODO: Handle error case (e.g., show a toast notification)
+                console.error("Failed to delete user:", errors);
+            }
+        });
+    }, [deleteForm, closeModal]);
+
     const tableHeaders = [
         { name: "No.", key: "no" },
         { name: "Name", key: "name" },
@@ -86,7 +122,6 @@ export default function Users({ users }) {
                                     {
                                         hasUsers ? (
                                             users.map((user, index) => (
-                                                console.log(user),
                                                 <tr key={user.id}>
                                                     <TableDataCell>{index + 1}</TableDataCell>
                                                     <TableDataCell>{user.name}</TableDataCell>
@@ -100,12 +135,23 @@ export default function Users({ users }) {
                                                                 <Pencil className="w-4.5 h-4.5 mr-2" />
                                                             </button>
                                                         </Link>
-                                                        <span className="mx-2">
-                                                            |
-                                                        </span>
-                                                        <button className="text-red-500 hover:text-red-700">
-                                                            <Trash2 className="w-4.5 h-4.5 ml-2 cursor-pointer " />
-                                                        </button>
+                                                        { 
+                                                            user.role !== 1 && (
+                                                                <>
+                                                                    <span className="mx-2">
+                                                                        |
+                                                                    </span>
+                                                                    <button 
+                                                                        type="button"
+                                                                        aria-label={`Delete ${user.name}`}
+                                                                        onClick={() => confirmDelete(user)}
+                                                                        disabled={deleteForm.processing}
+                                                                        className="text-red-500 hover:text-red-700">
+                                                                        <Trash2 className="w-4.5 h-4.5 ml-2 cursor-pointer " />
+                                                                    </button>
+                                                                </>
+                                                            )
+                                                        }
                                                     </TableDataCell>
                                                 </tr>
                                             ))
@@ -119,6 +165,35 @@ export default function Users({ users }) {
                     </TableCard>
                 </div>
             </AppLayout>
+
+            <WarningModal
+                isOpen={isOpen} 
+                onClose={closeModal}
+                title={`Delete ${deleteForm.data.user?.name} user`}
+                message={`Are you sure you want to delete ${deleteForm.data.user?.name} user? This action cannot be undone.`}
+                confirmButton={
+                    <Button
+                        size="sm"
+                        disabled={deleteForm.processing}
+                        onClick={handleDelete}
+                        className="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-warning-500 shadow-theme-xs hover:bg-warning-600 sm:w-auto"
+                    >
+                        {deleteForm.processing && <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />}
+                        Delete user
+                    </Button>
+                }
+                cancelButton={
+                    <Button
+                        type="button"
+                        onClick={closeModal}
+                        size="sm"
+                        disabled={deleteForm.processing}
+                        className="flex justify-center w-full px-4 py-3 text-sm font-medium text-gray-700 rounded-lg bg-gray-500 shadow-theme-xs hover:bg-gray-700 sm:w-auto"
+                    >
+                        Cancel
+                    </Button>
+                }
+            />
         </>
     );
 }

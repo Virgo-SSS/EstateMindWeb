@@ -69,6 +69,8 @@ class UserController extends Controller
 
         $user->delete();
 
+        Cache::forget('users');
+
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 }
