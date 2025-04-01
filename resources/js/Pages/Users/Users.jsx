@@ -1,4 +1,4 @@
-import { CopyPlus, LoaderCircle, Pencil, Search, Trash2 } from "lucide-react";
+import { CopyPlus, LoaderCircle, Pencil, Trash2 } from "lucide-react";
 import Button from "../../components/ui/button/Button";
 import AppLayout from "../../layout/AppLayout";
 import { Link, useForm } from "@inertiajs/react";
@@ -6,19 +6,15 @@ import Table from "../../components/ui/table/Table";
 import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 import TableDataCell from "../../components/ui/table/TableDataCell";
 import TableCard from "../../components/ui/table/TableCard";
-import TableCardHeader from "../../components/ui/table/TableCardHeader";
 import TableCardBody from "../../components/ui/table/TableCardBody";
 import TableHeader from "../../components/ui/table/TableHeader";
-import Input from "../../components/ui/input/Input";
-import Select from "../../components/ui/input/Select";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
 import WarningModal from "../../components/ui/modal/WarningModal";
 import { useModal } from "../../hooks/useModal";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 export default function Users({ users }) {
     const { isOpen, openModal, closeModal } = useModal()
-    
     const deleteForm = useForm({
         user: null,
     });
@@ -58,7 +54,7 @@ export default function Users({ users }) {
         { name: "Actions", key: "actions" },
     ];
 
-    const hasUsers = users.length > 0;
+    const hasUsers = useMemo(() => users.length > 0, [users]);
 
     return (
         <>
@@ -81,32 +77,6 @@ export default function Users({ users }) {
 
                 <div className="space-y-6">
                     <TableCard>
-                        <TableCardHeader>
-                            <form className="w-4xl">
-                                <div className="flex items-center gap-2">
-                                    <Input
-                                        placeholder="Filter by Name"
-                                    />
-                                    <Input
-                                        placeholder="Filter by Email"
-                                    />
-                                    <Select
-                                        placeholder="Filter by Role"
-                                        options={[
-                                            { label: "Super Admin", value: 1 },
-                                            { label: "Admin", value: 2 },
-                                        ]}
-                                    />
-                                    <Button
-                                        type="button"
-                                        size="sm"
-                                        startIcon={<Search className="w-4 h-4 mr-1" />}
-                                    >
-                                        Filter
-                                    </Button>
-                                </div>
-                            </form>
-                        </TableCardHeader>
                         <TableCardBody>
                             <Table>
                                 <TableHeader>
