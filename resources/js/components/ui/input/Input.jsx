@@ -19,6 +19,7 @@ export default function Input({
     iconPosition = "right",
 }) {
     let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`
+    let iconSpanClasses = `absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 dark:text-gray-400`;
 
     if (disabled) {
         inputClasses += ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 opacity-40`
@@ -32,7 +33,11 @@ export default function Input({
 
     if (iconPosition === "left") {
         inputClasses += ` pl-11`
+        iconSpanClasses += ` left-4`;
+    } else {
+        iconSpanClasses += ` right-4`;
     }
+
 
     return (
         <>
@@ -57,7 +62,7 @@ export default function Input({
                 {icon && ( 
                     <span
                         onClick={iconOnClick}
-                        className={`absolute z-30 -translate-y-1/2 cursor-pointer ${iconPosition + '-4' } top-1/2 dark:text-gray-400`}
+                        className={iconSpanClasses}
                         data-discover="true"
                     >
                         {icon}
