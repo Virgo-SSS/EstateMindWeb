@@ -2,13 +2,15 @@
 
 namespace App\DataTransferObjects\Users;
 
+use App\Enums\UserRole;
+
 class CreateUserDTO
 {
     public function __construct(
         public string $name,
         public string $email,
         public string $password,
-        public bool $isSuperAdmin,
+        public UserRole $role,
     ) {
     }
 
@@ -18,7 +20,7 @@ class CreateUserDTO
             name: $data['name'],
             email: $data['email'],
             password: $data['password'],
-            isSuperAdmin: $data['is_super_admin'],
+            role: UserRole::instance($data['role']),
         );
     }
 }

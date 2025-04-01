@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('manage-users', function (User $user) {
-            return $user->is_super_admin
+            return $user->role == UserRole::SUPER_ADMIN
                 ? Response::allow()
                 : Response::deny('You must be an super administrator.');
         });

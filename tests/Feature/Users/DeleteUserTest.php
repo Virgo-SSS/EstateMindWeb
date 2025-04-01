@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -10,15 +11,16 @@ class DeleteUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_a_user_can_be_deleted(): void
+    public function test_a_admin_can_be_deleted(): void
     {
         $this->superAdmin();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
 
         $response = $this->delete(route('users.destroy', $user->id));
 
         $response->assertRedirect(route('users.index'));
+        $response->assertSessionHas('success', 'User deleted successfully.');
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseMissing('users', [
@@ -48,5 +50,21 @@ class DeleteUserTest extends TestCase
         $response = $this->delete(route('users.destroy', $user->id));
 
         $response->assertRedirect(route('login'));
+    }
+
+    public function test_can_not_delete_super_admin(): void
+    {
+        $this->superAdmin();
+
+        $user = User::factory()->create(['role' => UserRole::SUPER_ADMIN]);
+
+        $response = $this->delete(route('users.destroy', $user->id));
+
+        $response->assertRedirect(route('users.index'));
+        $response->assertSessionHasErrors(['role' => 'You can not delete super admin.']);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+        ]);
     }
 }

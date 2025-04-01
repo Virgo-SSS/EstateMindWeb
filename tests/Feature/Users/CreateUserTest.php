@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -51,7 +52,7 @@ class CreateUserTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('users.index'));
         $response->assertSessionHas('success', 'User created successfully.');
-        $this->assertDatabaseHas('users', ['email' => $request['email'], 'name' => $request['name'], 'is_super_admin' => $request['is_super_admin']]);
+        $this->assertDatabaseHas('users', ['email' => $request['email'], 'name' => $request['name'], 'role' => $request['role']]);
     }
 
     public function test_non_super_admin_cannot_create_user(): void
@@ -64,7 +65,7 @@ class CreateUserTest extends TestCase
         $response = $this->post(route('users.store'), $request);
 
         $response->assertStatus(403);
-        $this->assertDatabaseMissing('users', ['email' => $request['email'], 'name' => $request['name'], 'is_super_admin' => $request['is_super_admin']]);
+        $this->assertDatabaseMissing('users', ['email' => $request['email'], 'name' => $request['name'], 'role' => $request['role']]);
     }
 
     public function test_guest_cannot_create_user(): void
@@ -76,7 +77,7 @@ class CreateUserTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
-        $this->assertDatabaseMissing('users', ['email' => $request['email'], 'name' => $request['name'], 'is_super_admin' => $request['is_super_admin']]);
+        $this->assertDatabaseMissing('users', ['email' => $request['email'], 'name' => $request['name'], 'role' => $request['role']]);
     }
 
     #[DataProvider('validationProvider')]
@@ -92,7 +93,7 @@ class CreateUserTest extends TestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password123',
-            'is_super_admin' => false,
+            'role' => UserRole::ADMIN->value,
         ], $validData);
 
         $data[$field] = $value;
@@ -145,13 +146,17 @@ class CreateUserTest extends TestCase
                 'field' => 'password',
                 'value' => '1234567',
             ],
-            'is_super_admin is required' => [
-                'field' => 'is_super_admin',
-                'value' => null,
+            'role is required' => [
+                'field' => 'role',
+                'value' => '',
             ],
-            'is_super_admin must be boolean' => [
-                'field' => 'is_super_admin',
+            'role must be integer' => [
+                'field' => 'role',
                 'value' => 'invalid',
+            ],
+            'role must be valid enum' => [
+                'field' => 'role',
+                'value' => 99999,
             ],
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -9,7 +10,7 @@ abstract class TestCase extends BaseTestCase
 {
     public function superAdmin(): User
     {
-        $superAdmin = User::factory()->create(['is_super_admin' => true]);
+        $superAdmin = User::factory()->create(['role' => UserRole::SUPER_ADMIN]);
 
         $this->actingAs($superAdmin);
 
@@ -18,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
     public function nonSuperAdmin(): User
     {
-        $user = User::factory()->create(['is_super_admin' => false]);
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
 
         $this->actingAs($user);
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -57,8 +58,8 @@ class EditUserTest extends TestCase
         $response = $this->put(route('users.update', $user), [
             'name' => 'John Doe',
             'email' => 'changeemail@gmail.com',
-            'is_super_admin' => true,
-            'password' => 'changepassword',
+            'role' => UserRole::SUPER_ADMIN->value,
+            'password' => 'changepassword123',
         ]);
 
         $response->assertRedirect(route('users.index'));
@@ -67,12 +68,12 @@ class EditUserTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'John Doe',
             'email' => 'changeemail@gmail.com',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ]);
         $this->assertDatabaseMissing('users', [
             'name' => $user->name,
             'email' => $user->email,
-            'is_super_admin' => $user->is_super_admin,
+            'role' => $user->role,
         ]);
     }
 
@@ -83,7 +84,7 @@ class EditUserTest extends TestCase
         $response = $this->put(route('users.update', $user), [
             'name' => 'John Doe',
             'email' => 'asdf@gmail.com',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ]);
 
         $response->assertStatus(302);
@@ -91,7 +92,7 @@ class EditUserTest extends TestCase
         $this->assertDatabaseMissing('users', [
             'name' => 'John Doe',
             'email' => 'asdf@gmail.com',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ]);
     }
 
@@ -102,14 +103,14 @@ class EditUserTest extends TestCase
         $response = $this->put(route('users.update', $user), [
             'name' => 'John Doe',
             'email' => 'asdfasdf@gmail.com',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ]);
 
         $response->assertStatus(403);
         $this->assertDatabaseMissing('users', [
             'name' => 'John Doe',
             'email' => 'asdfasdf@gmail.com',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ]);
     }
 
@@ -124,7 +125,7 @@ class EditUserTest extends TestCase
             'name' => 'John Doe',
             'email' => 'valid@example.com',
             'password' => 'password123',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ];
 
         $data[$field] = $value;
@@ -141,14 +142,15 @@ class EditUserTest extends TestCase
             'name must be string' => ['name', 123, 'string'],
             'name max length' => ['name', str_repeat('a', 256)],
 
-            'email is required' => ['email', '', 'required'],
-            'email must be string' => ['email', 123, 'string'],
-            'email must be valid format' => ['email', 'not-an-email'],
+            'email is required' => ['email', ''],
+            'email must be string' => ['email', 123],
+            'email must be valid format' => ['email', 'invalid-email'],
 
-            'password min length' => ['password', 'short', 'min'],
+            'password min length' => ['password', 'short'],
 
-            'is_super_admin is required' => ['is_super_admin', null],
-            'is_super_admin must be boolean' => ['is_super_admin', 'not-boolean'],
+            'role is required' => ['role', null],
+            'role must be integer' => ['role', 'string'],
+            'role must be valid enum' => ['role', 999999],
         ];
     }
 
@@ -162,7 +164,7 @@ class EditUserTest extends TestCase
             'name' => 'John Doe',
             'email' => $userToUpdate->email, // Using the same email
             'password' => 'password123',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ];
 
         $response = $this->put(route('users.update', $userToUpdate), $data);
@@ -184,7 +186,7 @@ class EditUserTest extends TestCase
             'name' => 'John Doe',
             'email' => 'taken@example.com', // Using another user's email
             'password' => 'password123',
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ];
 
         $response = $this->put(route('users.update', $userToUpdate), $data);
@@ -203,7 +205,7 @@ class EditUserTest extends TestCase
             'name' => 'John Doe',
             'email' => 'valid@example.com',
             'password' => null,
-            'is_super_admin' => true,
+            'role' => UserRole::SUPER_ADMIN->value,
         ];
 
         $response = $this->put(route('users.update', $userToUpdate), $data);

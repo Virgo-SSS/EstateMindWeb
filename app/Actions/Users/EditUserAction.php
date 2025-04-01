@@ -15,7 +15,7 @@ class EditUserAction implements EditUserActionInterface
         $newData = [
             'name' => $data->name,
             'email' => $data->email,
-            'is_super_admin' => $data->isSuperAdmin,
+            'role' => $data->role,
         ];
 
         if ($data->password) {
