@@ -34,4 +34,11 @@ class SaleStoreRequest extends FormRequest
             'quantity' => ['required', 'int', 'min:1'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'project_id.unique' => 'The project has already been registered for this month, choose another month or project.',
+        ];
+    }
 }

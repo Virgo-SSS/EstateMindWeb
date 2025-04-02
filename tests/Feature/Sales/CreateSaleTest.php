@@ -142,7 +142,7 @@ class CreateSaleTest extends TestCase
             'quantity' => 10,
         ]);
 
-        $response->assertSessionHasErrors(['project_id' => 'The project id has already been taken.']);
+        $response->assertSessionHasErrors(['project_id' => 'The project has already been registered for this month, choose another month or project.']);
         $response->assertStatus(302);
         $this->assertDatabaseMissing('sales', [
             'project_id' => $project->id,
