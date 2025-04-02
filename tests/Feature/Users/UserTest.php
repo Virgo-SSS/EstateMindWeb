@@ -3,6 +3,7 @@
 namespace Tests\Feature\Users;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -12,6 +13,11 @@ class UserTest extends TestCase
 
     public function test_super_admin_can_access_users_page(): void
     {
+        Cache::shouldReceive('remember')
+            ->once()
+            ->with('users', 12 * 60 * 60, \Closure::class)
+            ->andReturn(collect());
+            
         $this->superAdmin();
 
         $response = $this->get(route('users.index'));
