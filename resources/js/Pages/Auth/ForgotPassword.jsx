@@ -67,7 +67,7 @@ export default function ForgotPassord() {
                                 className="w-full"
                                 error={errors.email ? true : false}
                                 hint={errors.email}
-                                isRequired={true}
+                                required={true}
                             />
                         </div>
 

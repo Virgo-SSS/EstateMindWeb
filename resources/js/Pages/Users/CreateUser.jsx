@@ -96,7 +96,7 @@ export default function CreateUser() {
                                                 id="name"
                                                 name="name"
                                                 placeholder="Name"
-                                                isRequired={true}
+                                                required={true}
                                                 value={data.name}
                                                 onChange={handleChange}
                                                 error={errors.name ? true : false}
@@ -111,7 +111,7 @@ export default function CreateUser() {
                                                 id="email"
                                                 type="email"
                                                 name="email"
-                                                isRequired={true}
+                                                required={true}
                                                 placeholder="Email address"
                                                 value={data.email}
                                                 onChange={handleChange}
@@ -128,7 +128,7 @@ export default function CreateUser() {
                                                 name="password"
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Password"
-                                                isRequired={true}
+                                                required={true}
                                                 icon={showPassword ? (
                                                     <EyeIcon className="dark:text-white" />
                                                 ) : (

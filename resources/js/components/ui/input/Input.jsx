@@ -12,7 +12,7 @@ export default function Input({
     disabled = false,
     success = false,
     error = false,
-    isRequired = false,
+    required = false,
     hint,
     icon,
     iconOnClick,
@@ -55,7 +55,7 @@ export default function Input({
                         step={step}
                         disabled={disabled}
                         className={inputClasses}
-                        required={isRequired}
+                        required={required}
                     />
                 </div>
                 

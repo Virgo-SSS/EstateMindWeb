@@ -137,7 +137,7 @@ export default function CreateSale({ projects }) {
                                                 id="quantity"
                                                 type="number"
                                                 name="quantity"
-                                                isRequired={true}
+                                                required={true}
                                                 placeholder="Quantity"
                                                 value={data.quantity}
                                                 onChange={handleChange}

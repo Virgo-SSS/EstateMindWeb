@@ -95,7 +95,7 @@ export default function EditSale({ sale }) {
                                                 id="quantity"
                                                 type="number"
                                                 name="quantity"
-                                                // isRequired={true}
+                                                required={true}
                                                 placeholder="Quantity"
                                                 value={data.quantity}
                                                 onChange={handleChange}

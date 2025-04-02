@@ -93,7 +93,7 @@ export default function ResetPassword({ token, email }) {
                                 onChange={handleOnChange}
                                 error={errors.password ? true : false}
                                 hint={errors.password}
-                                isRequired={true}
+                                required={true}
                             />
                         </div>
 
@@ -116,7 +116,7 @@ export default function ResetPassword({ token, email }) {
                                 onChange={handleOnChange}
                                 error={errors.password_confirmation ? true : false}
                                 hint={errors.password_confirmation}
-                                isRequired={true}
+                                required={true}
                             />
                         </div>
 

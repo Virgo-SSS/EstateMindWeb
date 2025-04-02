@@ -95,7 +95,7 @@ export default function EditUser({ user }) {
                                                 id="name"
                                                 name="name"
                                                 placeholder="Name"
-                                                isRequired={true}
+                                                required={true}
                                                 value={data.name}
                                                 onChange={handleChange}
                                                 error={errors.name ? true : false}
@@ -110,7 +110,7 @@ export default function EditUser({ user }) {
                                                 id="email"
                                                 type="email"
                                                 name="email"
-                                                isRequired={true}
+                                                required={true}
                                                 placeholder="Email address"
                                                 value={data.email}
                                                 onChange={handleChange}

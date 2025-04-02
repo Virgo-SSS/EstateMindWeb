@@ -69,7 +69,7 @@ export default function Login() {
                                 onChange={(e) => setData("email", e.target.value)} 
                                 error={errors.email ? true : false}
                                 hint={errors.email}
-                                isRequired={true}
+                                required={true}
                             />
                         </div>
 
@@ -91,7 +91,7 @@ export default function Login() {
                                     <EyeOff className="dark:text-white" />
                                 )}
                                 iconOnClick={() => setShowPassword(!showPassword)}
-                                isRequired={true}
+                                required={true}
                             />
                         </div>
 
