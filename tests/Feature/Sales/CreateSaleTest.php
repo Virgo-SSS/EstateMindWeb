@@ -4,6 +4,7 @@ namespace Tests\Feature\Sales;
 
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -37,7 +38,7 @@ class CreateSaleTest extends TestCase
     {
         $response = $this->post(route('sales.store'), [
             'project_id' => 1,
-            'date' => '2021-10-10',
+            'date' => '2021-10',
             'quantity' => 10,
         ]);
 
@@ -46,6 +47,10 @@ class CreateSaleTest extends TestCase
 
     public function test_user_can_create_sale(): void
     {
+        Cache::shouldReceive('forget')
+            ->once()
+            ->with('sales');
+            
         $this->nonSuperAdmin();
 
         $project = Project::factory()->create();
@@ -76,7 +81,7 @@ class CreateSaleTest extends TestCase
         // Base data for a valid request
         $data = [
             'project_id' => $project->id,
-            'date' => '2023-05-10',
+            'date' => '2023-05',
             'quantity' => 5,
         ];
 

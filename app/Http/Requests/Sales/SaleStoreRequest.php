@@ -24,7 +24,7 @@ class SaleStoreRequest extends FormRequest
     {
         return [
             'project_id' => ['required', 'int', 'exists:projects,id'],
-            'date' => ['required', 'date:Y-m-d'],
+            'date' => ['required', 'date:Y-m'],
             'quantity' => ['required', 'int', 'min:1'],
         ];
     }

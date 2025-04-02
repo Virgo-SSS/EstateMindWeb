@@ -21,7 +21,7 @@ class Sale extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'datetime',
+            'date' => 'date:Y-m',
         ];
     }
 

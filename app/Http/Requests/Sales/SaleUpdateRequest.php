@@ -23,8 +23,6 @@ class SaleUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'date' => ['required', 'date'],
             'quantity' => ['required', 'integer', 'min:1'],
         ];
     }

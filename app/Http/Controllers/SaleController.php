@@ -48,11 +48,8 @@ class SaleController extends Controller
 
     public function edit(Sale $sale): Response
     {
-        $projects = Project::query()->get();
-
         return Inertia::render('Sales/EditSale', [
-            'sale' => $sale,
-            'projects' => $projects
+            'sale' => $sale->load(['project']),
         ]);
     }
 
@@ -60,7 +57,7 @@ class SaleController extends Controller
     {
         $action->handle(
             $sale,
-            CreateSaleDTO::fromArray($request->validated())
+            $request->validated()['quantity']
         );
 
         return redirect()->route('sales.index')->with('success', 'Sale updated successfully.');
@@ -69,6 +66,8 @@ class SaleController extends Controller
     public function destroy(Sale $sale): RedirectResponse
     {
         $sale->delete();
+        
+        Cache::forget('sales');
 
         return redirect()->route('sales.index')->with('success', 'Sale deleted successfully.');
     }

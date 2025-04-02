@@ -1,17 +1,50 @@
-import { Link } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import AppLayout from "../../layout/AppLayout"
 import Button from "../../components/ui/button/Button";
-import { CopyPlus } from "lucide-react";
+import { CopyPlus, LoaderCircle, Pencil, Trash2 } from "lucide-react";
 import TableCard from "../../components/ui/table/TableCard";
 import TableCardBody from "../../components/ui/table/TableCardBody";
 import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 import Table from "../../components/ui/table/Table";
 import TableHeader from "../../components/ui/table/TableHeader";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
 import TableDataCell from "../../components/ui/table/TableDataCell";
+import WarningModal from "../../components/ui/modal/WarningModal";
+import { useModal } from "../../hooks/useModal";
 
 export default function Sales({ sales }) {
+    const { isOpen, openModal, closeModal } = useModal()
+    const deleteForm = useForm({
+        sale: null,
+    })
+
+    const confirmDelete = useCallback((sale) => {
+        deleteForm.setData("sale", sale);
+        openModal();
+    }, [deleteForm, openModal]);
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+        
+        if (!deleteForm.data.sale?.id) {
+            // TODO: Handle error case (e.g., show a toast notification)
+            console.error("No sale selected for deletion.");
+            closeModal();
+            return;
+        }
+
+        deleteForm.delete(route("sales.destroy", deleteForm.data.sale.id), {
+            onSuccess: () => {
+                closeModal();
+                deleteForm.reset();
+            },
+            onError: (errors) => {
+                // TODO: Handle error case (e.g., show a toast notification)
+                console.error("Failed to delete sales:", errors);
+            }
+        });
+    }
 
     const hasSales = useMemo(() => {
         return sales.length > 0;
@@ -57,20 +90,28 @@ export default function Sales({ sales }) {
                                                     {sale.project.name}
                                                 </TableDataCell>
                                                 <TableDataCell>
-                                                    {new Date(sale.created_at).toLocaleDateString()}
+                                                    {new Date(sale.date).toLocaleDateString()}
                                                 </TableDataCell>
                                                 <TableDataCell>
                                                     {sale.quantity}
                                                 </TableDataCell>
                                                 <TableDataCell>
                                                     <Link href={route("sales.edit", sale.id)}>
-                                                        <Button
-                                                            size="xs"
-                                                            variant="outline"
-                                                        >
-                                                            Edit
-                                                        </Button>
+                                                        <button className="text-blue-500 hover:text-blue-700">
+                                                            <Pencil className="w-4.5 h-4.5 mr-2" />
+                                                        </button>
                                                     </Link>
+                                                    <span className="mx-2">
+                                                        |
+                                                    </span>
+                                                    <button 
+                                                        type="button"
+                                                        aria-label={`Delete Sales`}
+                                                        onClick={() => confirmDelete(sale)}
+                                                        disabled={deleteForm.processing}
+                                                        className="text-red-500 hover:text-red-700">
+                                                        <Trash2 className="w-4.5 h-4.5 ml-2 cursor-pointer " />
+                                                    </button>
                                                 </TableDataCell>
                                             </tr>
                                         )) : (
@@ -83,6 +124,34 @@ export default function Sales({ sales }) {
                     </TableCard>
                 </div>
             </AppLayout>
+            <WarningModal
+                isOpen={isOpen} 
+                onClose={closeModal}
+                title={`Delete sale`}
+                message={`Are you sure you want to delete sale? This action cannot be undone.`}
+                confirmButton={
+                    <Button
+                        size="sm"
+                        disabled={deleteForm.processing}
+                        onClick={handleDelete}
+                        className="flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg bg-warning-500 shadow-theme-xs hover:bg-warning-600 sm:w-auto"
+                    >
+                        {deleteForm.processing && <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />}
+                        Delete sale
+                    </Button>
+                }
+                cancelButton={
+                    <Button
+                        type="button"
+                        onClick={closeModal}
+                        size="sm"
+                        disabled={deleteForm.processing}
+                        className="flex justify-center w-full px-4 py-3 text-sm font-medium text-gray-700 rounded-lg bg-gray-500 shadow-theme-xs hover:bg-gray-700 sm:w-auto"
+                    >
+                        Cancel
+                    </Button>
+                }
+            />
         </>
     );
 }

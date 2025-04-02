@@ -4,6 +4,7 @@ namespace Tests\Feature\Sales;
 
 use App\Models\Project;
 use App\Models\Sale;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class DeleteSaleTest extends TestCase
@@ -27,6 +28,10 @@ class DeleteSaleTest extends TestCase
 
     public function test_user_can_delete_sale(): void
     {
+        Cache::shouldReceive('forget')
+            ->once()
+            ->with('sales');
+            
         $this->nonSuperAdmin();
 
         $sale = $this->createSale();

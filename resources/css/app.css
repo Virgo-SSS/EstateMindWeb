@@ -282,9 +282,9 @@ layer(base);
 
 @layer utilities {
   /* For Remove Date Icon */
-  input[type="date"]::-webkit-inner-spin-button,
+  /* input[type="date"]::-webkit-inner-spin-button, */
   input[type="time"]::-webkit-inner-spin-button,
-  input[type="date"]::-webkit-calendar-picker-indicator,
+  /* input[type="date"]::-webkit-calendar-picker-indicator, */
   input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
