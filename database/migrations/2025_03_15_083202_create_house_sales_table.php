@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained('projects');
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
             $table->date('date');
             $table->integer('quantity');
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace Tests\Feature\Projects;
 
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class CreateProjectTest extends TestCase
@@ -18,7 +19,11 @@ class CreateProjectTest extends TestCase
     }
 
     public function test_user_can_create_project(): void
-    {
+    {   
+        Cache::shouldReceive('forget')
+            ->once()
+            ->with('projects');
+
         $this->nonSuperAdmin();
 
         $response = $this->post(route('projects.store'), [
@@ -41,7 +46,7 @@ class CreateProjectTest extends TestCase
             'name' => '',
         ]);
 
-        $response->assertSessionHasErrors('name');
+        $response->assertSessionHasErrors('name', 'The name field is required.');
     }
 
     public function test_project_name_is_unique(): void
@@ -54,7 +59,7 @@ class CreateProjectTest extends TestCase
             'name' => $project->name,
         ]);
 
-        $response->assertSessionHasErrors('name');
+        $response->assertSessionHasErrors('name', 'The name has already been taken.');
     }
 
     public function test_project_name_is_not_more_than_255_characters(): void
@@ -65,7 +70,7 @@ class CreateProjectTest extends TestCase
             'name' => str_repeat('a', 256),
         ]);
 
-        $response->assertSessionHasErrors('name');
+        $response->assertSessionHasErrors('name', 'The name must not be greater than 255 characters.');
     }
 
     public function test_project_name_is_a_string(): void
@@ -76,6 +81,6 @@ class CreateProjectTest extends TestCase
             'name' => 123,
         ]);
 
-        $response->assertSessionHasErrors('name');
+        $response->assertSessionHasErrors('name', 'The name must be a string.');
     }
 }

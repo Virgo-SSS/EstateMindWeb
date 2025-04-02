@@ -3,6 +3,7 @@
 namespace Tests\Feature\Projects;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -19,6 +20,11 @@ class ProjectTest extends TestCase
 
     public function test_user_can_view_projects(): void
     {
+        Cache::shouldReceive('remember')
+            ->once()
+            ->with('projects', 60 * 60 * 12, \Closure::class)
+            ->andReturn(collect());
+            
         $this->nonSuperAdmin();
 
         $response = $this->get(route('projects.index'));

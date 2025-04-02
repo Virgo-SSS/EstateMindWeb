@@ -41,6 +41,7 @@ class ProjectController extends Controller
     {
         $project->delete();
         Cache::forget('projects');
+        Cache::forget('sales');
 
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }
