@@ -23,7 +23,12 @@ class DeleteSaleTest extends TestCase
 
         $response->assertRedirect(route('login'));
         $response->assertStatus(302);
-        $this->assertDatabaseHas('sales', $sale->toArray());
+        $this->assertDatabaseHas('sales', [
+            'id' => $sale->id,
+            'project_id' => $sale->project_id,
+            'date' => $sale->date,
+            'quantity' => $sale->quantity,
+        ]);
     }
 
     public function test_user_can_delete_sale(): void

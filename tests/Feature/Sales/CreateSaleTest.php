@@ -54,10 +54,11 @@ class CreateSaleTest extends TestCase
         $this->nonSuperAdmin();
 
         $project = Project::factory()->create();
+        $date = now()->format('Y-m');
 
         $response = $this->post(route('sales.store'), [
             'project_id' => $project->id,
-            'date' => '2021-10',
+            'date' => $date,
             'quantity' => 10,
         ]);
 
@@ -65,7 +66,7 @@ class CreateSaleTest extends TestCase
         $response->assertSessionHas('success', 'Sale created successfully.');
         $this->assertDatabaseHas('sales', [
             'project_id' => $project->id,
-            'date' => '2021-10-01',
+            'date' => $date . '-01',
             'quantity' => 10,
         ]);
     }
@@ -93,6 +94,12 @@ class CreateSaleTest extends TestCase
 
         // Assert validation error exists for the specified field
         $response->assertSessionHasErrors([$field => $expectedError]);
+        $response->assertStatus(302);
+        $this->assertDatabaseMissing('sales', [
+            'project_id' => $project->id,
+            'date' => '2023-05-01',
+            'quantity' => 5,
+        ]);
     }
 
     public static function validationDataProvider(): array
@@ -113,5 +120,39 @@ class CreateSaleTest extends TestCase
             'quantity must be at least 1' => ['quantity', 0, 'The quantity field must be at least 1.'],
             'quantity must be at least 1 (negative)' => ['quantity', -5, 'The quantity field must be at least 1.'],
         ];
+    }
+
+    public function test_user_cannot_create_sale_with_duplicate_date(): void
+    {
+        $this->nonSuperAdmin();
+
+        $project = Project::factory()->create();
+
+        $date = now()->addMonth()->format('Y-m');
+
+        $this->post(route('sales.store'), [
+            'project_id' => $project->id,
+            'date' => $date,
+            'quantity' => 5,
+        ]);
+
+        $response = $this->post(route('sales.store'), [
+            'project_id' => $project->id,
+            'date' => $date,
+            'quantity' => 10,
+        ]);
+
+        $response->assertSessionHasErrors(['project_id' => 'The project id has already been taken.']);
+        $response->assertStatus(302);
+        $this->assertDatabaseMissing('sales', [
+            'project_id' => $project->id,
+            'date' => $date . '-01',
+            'quantity' => 10,
+        ]);
+        $this->assertDatabaseHas('sales', [
+            'project_id' => $project->id,
+            'date' => $date . '-01',
+            'quantity' => 5,
+        ]);
     }
 }

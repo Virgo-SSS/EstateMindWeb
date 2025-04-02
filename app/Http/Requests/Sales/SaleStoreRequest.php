@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Sales;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class SaleStoreRequest extends FormRequest
 {
@@ -23,7 +25,11 @@ class SaleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'int', 'exists:projects,id'],
+            'project_id' => ['required', 'int', 'exists:projects,id', 
+                Rule::unique('sales', 'project_id')->where(function (Builder $query) {
+                    return $query->where('date', $this->date . '-01');
+                }),
+            ],
             'date' => ['required', 'date:Y-m'],
             'quantity' => ['required', 'int', 'min:1'],
         ];
