@@ -90,7 +90,7 @@ export default function Sales({ sales }) {
                                                     {sale.project.name}
                                                 </TableDataCell>
                                                 <TableDataCell>
-                                                    {new Date(sale.date).toLocaleDateString()}
+                                                    {new Date(sale.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                                 </TableDataCell>
                                                 <TableDataCell>
                                                     {sale.quantity}
