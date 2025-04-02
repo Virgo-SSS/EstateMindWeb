@@ -19,7 +19,7 @@ class CreateProjectTest extends TestCase
     }
 
     public function test_user_can_create_project(): void
-    {   
+    {
         Cache::shouldReceive('forget')
             ->once()
             ->with('projects');

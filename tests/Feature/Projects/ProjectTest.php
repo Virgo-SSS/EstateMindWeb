@@ -24,7 +24,7 @@ class ProjectTest extends TestCase
             ->once()
             ->with('projects', 60 * 60 * 12, \Closure::class)
             ->andReturn(collect());
-            
+
         $this->nonSuperAdmin();
 
         $response = $this->get(route('projects.index'));

@@ -199,7 +199,7 @@ class EditUserTest extends TestCase
         Cache::shouldReceive('forget')
             ->once()
             ->with('users');
-            
+
         $this->superAdmin();
 
         $userToUpdate = User::factory()->create();
@@ -226,7 +226,7 @@ class EditUserTest extends TestCase
         Cache::shouldReceive('forget')
             ->once()
             ->with('users');
-            
+
         $this->superAdmin();
 
         $user = User::factory()->create();

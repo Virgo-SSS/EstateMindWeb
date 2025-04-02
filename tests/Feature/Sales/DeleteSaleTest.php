@@ -36,7 +36,7 @@ class DeleteSaleTest extends TestCase
         Cache::shouldReceive('forget')
             ->once()
             ->with('sales');
-            
+
         $this->nonSuperAdmin();
 
         $sale = $this->createSale();

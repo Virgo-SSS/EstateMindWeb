@@ -66,7 +66,7 @@ class SaleController extends Controller
     public function destroy(Sale $sale): RedirectResponse
     {
         $sale->delete();
-        
+
         Cache::forget('sales');
 
         return redirect()->route('sales.index')->with('success', 'Sale deleted successfully.');

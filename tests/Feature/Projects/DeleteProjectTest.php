@@ -47,7 +47,7 @@ class DeleteProjectTest extends TestCase
         Cache::shouldReceive('forget')
         ->once()
         ->with('projects');
-        
+
         Cache::shouldReceive('forget')
         ->once()
         ->with('sales');

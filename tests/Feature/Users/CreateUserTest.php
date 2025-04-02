@@ -52,8 +52,8 @@ class CreateUserTest extends TestCase
 
         $response->assertStatus(403);
         $this->assertDatabaseMissing('users', [
-            'email' => $request['email'], 
-            'name' => $request['name'], 
+            'email' => $request['email'],
+            'name' => $request['name'],
             'role' => $request['role']
         ]);
     }
@@ -68,8 +68,8 @@ class CreateUserTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('login'));
         $this->assertDatabaseMissing('users', [
-            'email' => $request['email'], 
-            'name' => $request['name'], 
+            'email' => $request['email'],
+            'name' => $request['name'],
             'role' => $request['role']
         ]);
     }
@@ -187,6 +187,7 @@ class CreateUserTest extends TestCase
             'email' => $request['email'],
             'name' => $request['name'],
             'role' => $request['role'],
-        ]);;
+        ]);
+        ;
     }
 }

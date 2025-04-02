@@ -23,13 +23,13 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
 
     Route::get('/settings/password', [ChangePasswordController::class, 'index'])->name('settings.password');
     Route::post('/settings/password', [ChangePasswordController::class, 'update'])->name('settings.password.update');
 
-    
+
     Route::group(['middleware' => 'can:manage-users'], function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');

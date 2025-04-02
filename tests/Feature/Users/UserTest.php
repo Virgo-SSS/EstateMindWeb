@@ -17,7 +17,7 @@ class UserTest extends TestCase
             ->once()
             ->with('users', 12 * 60 * 60, \Closure::class)
             ->andReturn(collect());
-            
+
         $this->superAdmin();
 
         $response = $this->get(route('users.index'));

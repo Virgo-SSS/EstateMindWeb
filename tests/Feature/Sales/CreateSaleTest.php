@@ -50,7 +50,7 @@ class CreateSaleTest extends TestCase
         Cache::shouldReceive('forget')
             ->once()
             ->with('sales');
-            
+
         $this->nonSuperAdmin();
 
         $project = Project::factory()->create();

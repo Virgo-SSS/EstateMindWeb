@@ -25,7 +25,7 @@ class SaleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'int', 'exists:projects,id', 
+            'project_id' => ['required', 'int', 'exists:projects,id',
                 Rule::unique('sales', 'project_id')->where(function (Builder $query) {
                     return $query->where('date', $this->date . '-01');
                 }),
