@@ -25,20 +25,10 @@ class SaleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'int', 'exists:projects,id',
-                Rule::unique('sales', 'project_id')->where(function (Builder $query) {
-                    return $query->where('date', $this->date . '-01');
-                }),
-            ],
-            'date' => ['required', 'date:Y-m'],
-            'quantity' => ['required', 'int', 'min:1'],
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'project_id.unique' => 'The project has already been registered for this month, choose another month or project.',
+            'sales' => ['required', 'array'],
+            'sales.*.project' => ['required', 'string'],
+            'sales.*.date' => ['required', 'date_format:Y-m', 'date'],
+            'sales.*.quantity' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

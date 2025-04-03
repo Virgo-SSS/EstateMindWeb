@@ -6,5 +6,5 @@ use App\DataTransferObjects\Sales\CreateSaleDTO;
 
 interface CreateSaleActionInterface
 {
-    public function handle(CreateSaleDTO $data): void;
+    public function handle(array $data): void;
 }

@@ -37,4 +37,13 @@ class SaleTest extends TestCase
         );
         $response->assertStatus(200);
     }
+
+    public function test_can_downwload_sales_sample_file(): void
+    {
+        $this->nonSuperAdmin();
+
+        $response = $this->get(route('sales.download.sample'));
+        $response->assertStatus(200);
+        $response->assertDownload('SalesSample.xlsx');
+    }
 }

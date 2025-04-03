@@ -50,4 +50,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/{sale}/edit', [SaleController::class, 'edit'])->name('sales.edit');
     Route::put('/sales/{sale}', [SaleController::class, 'update'])->name('sales.update');
     Route::delete('/sales/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
+    Route::get('/sales/download/sample', [SaleController::class, 'downloadSample'])->name('sales.download.sample');
 });
