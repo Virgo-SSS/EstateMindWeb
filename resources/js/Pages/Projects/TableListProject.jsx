@@ -10,7 +10,6 @@ import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 import TableDataCell from "../../components/ui/table/TableDataCell";
 import TableCard from "../../components/ui/table/TableCard";
 import TableCardHeader from "../../components/ui/table/TableCardHeader";
-import TableCardFooter from "../../components/ui/table/TableCardFooter";
 import TableCardBody from "../../components/ui/table/TableCardBody";
 import { Search } from "lucide-react";
 import Input from "../../components/ui/input/Input";

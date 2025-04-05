@@ -10,7 +10,7 @@ import { useForm } from "@inertiajs/react";
   
 export default function Projects({ projects }) {
     const { isOpen, openModal, closeModal } = useModal();
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
         name: "",
     });
 
@@ -18,8 +18,7 @@ export default function Projects({ projects }) {
         e.preventDefault();
 
         if(!data.name) {
-            errors.name = "Project name is required";
-            setData("name", "");
+            setError("name", "Project name is required");
             return;
         }
 
@@ -27,6 +26,10 @@ export default function Projects({ projects }) {
             onSuccess: () => {
                 reset();
                 closeModal();
+            },
+            onError: (err) => {
+                // TODO: Handle error case (e.g., show a toast notification)
+                console.log("Failed to create project:", err);
             }
         });
     }
@@ -39,6 +42,7 @@ export default function Projects({ projects }) {
 
     const handleModalClose = () => {
         reset();
+        clearErrors();
         closeModal();
     }
 
@@ -79,16 +83,17 @@ export default function Projects({ projects }) {
                     <form className="flex flex-col" onSubmit={handleSave} onKeyDown={handleKeyDown}>
                         <div className="h-[80px] px-2 pb-3">
                             <div className="mb-4">
-                                <Label htmlFor="projectName">
+                                <Label htmlFor="name">
                                     Name
                                 </Label>
                                 <Input
-                                    id="projectName"
-                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    required
                                     placeholder={"Project Name"}
                                     value={data.name}
                                     onChange={e => setData("name", e.target.value)}
-                                    error={errors.name ? true : false}
+                                    error={!!errors.name}
                                     hint={errors.name}
                                 />
                             </div>

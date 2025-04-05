@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 
 export default function EditUser({ user }) {
     const [ showPassword, setShowPassword ] = useState(false)
-    const { data, setData, put, processing, errors, reset } = useForm({
+    const { data, setData, put, processing, errors, reset, setError, clearErrors } = useForm({
         name: user.name,
         email: user.email,
         role: user.role,
@@ -26,7 +26,6 @@ export default function EditUser({ user }) {
         e.preventDefault();
 
         if (!validateForm()) {
-            setData({...data})
             return;
         }
 
@@ -43,9 +42,7 @@ export default function EditUser({ user }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (errors[name]) {
-            delete errors[name];
-        }
+        clearErrors(name);
         setData(name, value);
     }
 
@@ -55,10 +52,10 @@ export default function EditUser({ user }) {
 
         requiredFields.forEach(field => {
             if (!data[field]) {
-                errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+                setError(field, `${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
                 allFieldsFilled = false;
             } else {
-                delete errors[field];
+                clearErrors(field);
             }
         });
 
@@ -95,10 +92,10 @@ export default function EditUser({ user }) {
                                                 id="name"
                                                 name="name"
                                                 placeholder="Name"
-                                                required={true}
+                                                required
                                                 value={data.name}
                                                 onChange={handleChange}
-                                                error={errors.name ? true : false}
+                                                error={!!errors.name}
                                                 hint={errors.name}
                                             />
                                         </div>
@@ -110,11 +107,11 @@ export default function EditUser({ user }) {
                                                 id="email"
                                                 type="email"
                                                 name="email"
-                                                required={true}
+                                                required
                                                 placeholder="Email address"
                                                 value={data.email}
                                                 onChange={handleChange}
-                                                error={errors.email ? true : false}
+                                                error={!!errors.email}
                                                 hint={errors.email}
                                             />
                                         </div>
@@ -135,7 +132,7 @@ export default function EditUser({ user }) {
                                                 iconOnClick={() => setShowPassword(!showPassword)}
                                                 value={data.password}
                                                 onChange={handleChange}
-                                                error={errors.password ? true : false}
+                                                error={!!errors.password}
                                                 hint={errors.password}
                                             />
                                         </div>
@@ -146,12 +143,12 @@ export default function EditUser({ user }) {
                                             <Select
                                                 id="role"
                                                 name="role"
-                                                required={true}
+                                                required
                                                 placeholder="Role"
                                                 options={roleOptions}
                                                 value={data.role}
                                                 onChange={handleChange}
-                                                error={errors.role ? true : false}
+                                                error={!!errors.role}
                                                 hint={errors.role}
                                             />
                                         </div>

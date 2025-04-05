@@ -1,4 +1,4 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import AppLayout from "../../layout/AppLayout";
 import { useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
@@ -10,7 +10,7 @@ export default function Password() {
     const [showPassword, setShowPassword] = useState(false)
     const pageProps = usePage().props
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
         current_password: "",
         password: "",
         password_confirmation: "",
@@ -18,12 +18,41 @@ export default function Password() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (!validateForm()) {
+            return
+        }
 
         post(route("settings.password.update"), {
             onSuccess: () => {
-                reset("current_password", "password", "password_confirmation")
+                reset()
+            },
+            onError: (err) => {
+                // TODO: Handle error case (e.g., show a toast notification)
+                console.log("Failed to update password:", err)
             }
         })
+    }
+
+    const validateForm = () => {
+        const requiredFields = ["current_password", "password", "password_confirmation"];
+        let allFieldsFilled = true;
+
+        requiredFields.forEach(field => {
+            if (!data[field]) {
+                
+                if (field == "current_password") {
+                    setError(field, "Current password is required");
+                } else {
+                    setError(field, `${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+                }
+
+                allFieldsFilled = false;
+            } else {
+                clearErrors(field);
+            }
+        });
+
+        return allFieldsFilled;
     }
 
     return (
@@ -80,11 +109,13 @@ export default function Password() {
                                             </Label>
                                             <Input
                                                 id="current_password"
+                                                name="current_password"
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your current password"
+                                                required
                                                 value={data.current_password}
                                                 onChange={(e) => setData("current_password", e.target.value)}
-                                                error={errors.current_password ? true : false}
+                                                error={!!errors.current_password}
                                                 hint={errors.current_password}
                                             />
                                         </div>
@@ -95,11 +126,13 @@ export default function Password() {
                                             </Label>
                                             <Input
                                                 id="password"
+                                                name="password"
+                                                required
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your new password"
                                                 value={data.password}
                                                 onChange={(e) => setData("password", e.target.value)}
-                                                error={errors.password ? true : false}
+                                                error={!!errors.password}
                                                 hint={errors.password}
                                             />
                                         </div>
@@ -110,6 +143,8 @@ export default function Password() {
                                             </Label>
                                             <Input
                                                 id="confirm_password"
+                                                name="confirm_password"
+                                                required
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Confirm your new password"
                                                 value={data.password_confirmation}
@@ -126,8 +161,11 @@ export default function Password() {
                                                 </div>
                                             )
                                         }
-                                        <Button className="w-full" size="sm" variant="primary" type="submit" disabled={processing}>
-                                            {processing ? "Updating..." : "Update Password"}
+                                        <Button size="sm" disabled={processing}>
+                                            {processing && (
+                                                <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />
+                                            )}
+                                            Update Password
                                         </Button>
                                     </div>
                                 </div>
