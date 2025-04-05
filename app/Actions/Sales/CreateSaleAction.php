@@ -3,7 +3,6 @@
 namespace App\Actions\Sales;
 
 use App\ActionContracts\Sales\CreateSaleActionInterface;
-use App\DataTransferObjects\Sales\CreateSaleDTO;
 use App\Models\Project;
 use App\Models\Sale;
 use Carbon\Carbon;
@@ -18,16 +17,16 @@ class CreateSaleAction implements CreateSaleActionInterface
      */
     public function handle(array $data): void
     {
-        $projectNames = collect($data['sales'])->pluck('project')->unique();
+        $projects = collect($data['sales'])->pluck('project')->unique();
 
-        $existingProjects = Project::query()->whereIn('name', $projectNames)
-            ->pluck('id', 'name')
+        $existingProjects = Project::query()->whereIn('id', $projects)
+            ->pluck('id')
             ->toArray();
 
-        $this->identifyMissingProjects($projectNames, $existingProjects);
+        $this->identifyMissingProjects($projects, $existingProjects);
 
         // Prepare sales data for bulk insert/update
-        $salesData = $this->prepareSalesData($data, $existingProjects);
+        $salesData = $this->prepareSalesData($data);
         $this->insertSales($salesData);
 
         Cache::forget('sales');
@@ -38,22 +37,25 @@ class CreateSaleAction implements CreateSaleActionInterface
         DB::transaction(function () use ($salesData) {
             foreach ($salesData as $sale) {
                 Sale::query()->updateOrCreate(
-                    ['project_id' => $sale['project_id'], 'date' => $sale['date']],
-                    ['quantity' => $sale['quantity']]
+                    [
+                        'project_id' => $sale['project_id'], 
+                        'date' => $sale['date']
+                    ],
+                    [
+                        'quantity' => $sale['quantity']
+                    ]
                 );
             }
         });
     }
 
-    private function prepareSalesData(array $data, array $existingProjects): array
+    private function prepareSalesData(array $data): array
     {
-        return collect($data['sales'])->map(function ($sale) use ($existingProjects) {
+        return collect($data['sales'])->map(function (array $sale) {
             return [
-                'project_id' => $existingProjects[$sale['project']],
+                'project_id' => $sale['project'],
                 'date' => Carbon::parse($sale['date']),
                 'quantity' => $sale['quantity'],
-                'updated_at' => now(),
-                'created_at' => now(),
             ];
         })->toArray();
     }
@@ -61,13 +63,13 @@ class CreateSaleAction implements CreateSaleActionInterface
     /**
      * @throws \Exception
      */
-    private function identifyMissingProjects(Collection $projectNames, array $existingProjects): void
+    private function identifyMissingProjects(Collection $projects, array $existingProjects): void
     {
         // Identify missing projects
-        $missingProjects = $projectNames->diff(array_keys($existingProjects));
+        $missingProjects = $projects->diff($existingProjects);
 
         if ($missingProjects->isNotEmpty()) {
-            throw new \Exception('Project(s) name is not found: ' . implode(', ', $missingProjects->toArray()) . '. Please create them first or check the spelling.');
+            throw new \Exception('Project(s) with Ids: ' . implode(', ', $missingProjects->toArray()) . ' is not found. Please create them first or check the spelling.');
         }
     }
 }

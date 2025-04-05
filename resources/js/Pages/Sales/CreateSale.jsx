@@ -4,28 +4,78 @@ import Label from "../../components/ui/label/Label";
 import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/ui/input/Select";
-import { Download, LoaderCircle, Sheet, Trash2 } from 'lucide-react';
+import { Download, ListPlus, LoaderCircle, Sheet, Trash2 } from 'lucide-react';
 
 export default function CreateSale({ projects }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        project_id: "",
-        date: new Date(),
+    const newData = {
+        project: "",
+        date: new Date().toISOString().slice(0, 7),
         quantity: "",
+    };
+
+    const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
+        sales: [newData],
     });
 
-    const handleChange = (e) => {
+    const handleNewInputGroup = (e) => {
+        e.preventDefault();
+        setData((prevData) => ({
+            ...prevData,
+            sales: [...prevData.sales, newData],
+        }));
+    };
+
+    const handleRemoveInputGroup = (index) => {
+        setData((prevData) => {
+            const newSales = [...prevData.sales];
+            newSales.splice(index, 1);
+            return { ...prevData, sales: newSales };
+        });
+    };
+
+    const handleChange = (e, index) => {
         const { name, value } = e.target;
-        if (errors[name]) {
-            delete errors[name];
-        }
-        setData(name, value);
+
+        setData((prevData) => {
+            const updatedSales = [...prevData.sales];
+            updatedSales[index] = {
+                ...updatedSales[index],
+                [name]: value,
+            };
+            return { ...prevData, sales: updatedSales };
+        });
+
+        // Clear error for the specific field
+        clearErrors(`sales.${index}.${name}`);
+    };
+    console.log("errors", errors);
+
+    const validateForm = () => {
+        const requiredFields = ["project", "date", "quantity"];
+        let allFieldsFilled = true;
+
+        data.sales.forEach((item, index) => {
+            requiredFields.forEach((field) => {
+                if (!item[field]) {
+                    allFieldsFilled = false;
+
+                    let errorMessage = `${field} is required`;
+
+                    setError(`sales.${index}.${field}`, errorMessage);
+                } else {
+                    clearErrors(`sales.${index}.${field}`);
+                }
+            });
+        });
+
+        return allFieldsFilled;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!validateForm()) {
-            setData({ ...data });
+            setData((prevData) => ({ ...prevData }));
             return;
         }
 
@@ -34,31 +84,15 @@ export default function CreateSale({ projects }) {
                 reset();
             },
             onError: (err) => {
-                // TODO: Handle error case (e.g., show a toast notification)
                 console.log("Failed to create sale:", err);
             }
         });
-    }
-
-    const validateForm = () => {
-        const requiredFields = ["project_id", "date", "quantity"];
-        let allFieldsFilled = true;
-
-        requiredFields.forEach(field => {
-            if (!data[field]) {
-                errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
-                allFieldsFilled = false;
-            } else {
-                delete errors[field];
-            }
-        });
-
-        return allFieldsFilled;
-    }
+    };
 
     return (
         <>
             <AppLayout>
+                {/* Header & Buttons */}
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <Link
                         href={route("sales.index")}
@@ -70,9 +104,7 @@ export default function CreateSale({ projects }) {
                 <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
                     <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] w-6xl mx-auto">
                         <div className="flex flex-col gap-2 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Create Sale</h3>
-                            </div>
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Create Sale</h3>
                             <div>
                                 <a href={route("sales.download.sample")} target="_blank">
                                     <Button
@@ -94,97 +126,112 @@ export default function CreateSale({ projects }) {
                                 </Button>
                             </div>
                         </div>
+
+                        {/* Form */}
                         <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-                            <div className="space-y-6">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-4 relative mb-3">
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                {data.sales.map((item, index) => (
+                                    <div key={index} className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-4 relative mb-3">
                                         <div className="px-6 py-4">
                                             <button
                                                 type="button"
                                                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-white/90"
+                                                onClick={() => handleRemoveInputGroup(index)}
                                             >
                                                 <Trash2 className="w-5 h-5 text-red-500 hover:text-red-700" />
                                             </button>
                                         </div>
                                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-6">
+                                            {/* Project Select */}
                                             <div>
-                                                <Label htmlFor="project_id">
-                                                    Project <span className="text-error-500">*</span>{" "}
+                                                <Label htmlFor="project">
+                                                    Project <span className="text-error-500">*</span>
                                                 </Label>
                                                 <Select
-                                                    id="project_id"
-                                                    name="project_id"
+                                                    id="project"
+                                                    name="project"
                                                     placeholder="Select Project"
-                                                    value={data.project_id}
-                                                    required={true}
-                                                    options={projects.map((project) => ({
-                                                        value: project.id,
-                                                        label: project.name,
-                                                    }))}
-                                                    onChange={handleChange}
-                                                    error={!!errors.project_id}
-                                                    hint={errors.project_id}
+                                                    value={item.project}
+                                                    required
+                                                    options={[
+                                                        { value: "", label: "Select Project", disabled: true },
+                                                        ...projects.map((project) => ({
+                                                            value: project.id,
+                                                            label: project.name,
+                                                        })),
+                                                    ]}
+                                                    onChange={(e) => handleChange(e, index)}
+                                                    error={!!errors[`sales.${index}.project`]}
+                                                    hint={errors[`sales.${index}.project`]}
                                                 />
                                             </div>
+
+                                            {/* Date */}
                                             <div>
                                                 <Label htmlFor="date">
-                                                    Month <span className="text-error-500">*</span>{" "}
+                                                    Month <span className="text-error-500">*</span>
                                                 </Label>
-                                                <div className="relative w-full flatpickr-wrapper">
-                                                    {/* TODO: Sementara pakai date dari html dulu sampai react-flatpickr sudah bisa jalan di react 19 */}
-                                                    <Input
-                                                        id="date"
-                                                        name="date"
-                                                        type="month"
-                                                        value={data.date}
-                                                        onChange={handleChange}
-                                                        error={!!errors.date}
-                                                        hint={errors.date}
-                                                        placeholder="Select Month"
-                                                    />
-
-                                                    {/* <Flatpickr
-                                                    id="datePicker"
+                                                <Input
+                                                    id="date"
                                                     name="date"
-                                                    value={data.date}
-                                                    options={{
-                                                        dateFormat: "Y-m-d", // Set the date format
-                                                    }}
-                                                    placeholder="Select an option"
-                                                    className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30  bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700  dark:focus:border-brand-800"
+                                                    type="month"
+                                                    placeholder="Select Month"
+                                                    required
+                                                    value={item.date}
+                                                    onChange={(e) => handleChange(e, index)}
+                                                    error={!!errors[`sales.${index}.date`]}
+                                                    hint={errors[`sales.${index}.date`]}
                                                 />
-                                                <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-                                                    <Calendar className="size-6" />
-                                                </span> */}
-                                                </div>
                                             </div>
+
+                                            {/* Quantity */}
                                             <div>
                                                 <Label htmlFor="quantity">
-                                                    Quantity <span className="text-error-500">*</span>{" "}
+                                                    Quantity <span className="text-error-500">*</span>
                                                 </Label>
                                                 <Input
                                                     id="quantity"
                                                     type="number"
                                                     name="quantity"
-                                                    required={true}
+                                                    required
                                                     placeholder="Quantity"
-                                                    value={data.quantity}
-                                                    onChange={handleChange}
-                                                    error={!!errors.quantity}
-                                                    hint={errors.quantity}
+                                                    value={item.quantity}
+                                                    onChange={(e) => handleChange(e, index)}
+                                                    error={!!errors[`sales.${index}.quantity`]}
+                                                    hint={errors[`sales.${index}.quantity`]}
                                                 />
                                             </div>
                                         </div>
                                     </div>
+                                ))}
 
+                                {
+                                    errors.sales && (
+                                        <p className="mt-1.5 text-sm text-error-500">
+                                            {errors.sales}
+                                        </p>
+                                    )
+                                }
+
+                                {/* Buttons */}
+                                <div className="flex justify-between">
                                     <Button size="xs" className="mt-4" disabled={processing}>
                                         {processing && (
                                             <LoaderCircle className="w-5 h-5 mr-0.5 text-white animate-spin" />
                                         )}
                                         Create Sale
                                     </Button>
-                                </form>
-                            </div>
+                                    <Button
+                                        size="xs"
+                                        className="mt-4"
+                                        type="button"
+                                        onClick={handleNewInputGroup}
+                                    >
+                                        <ListPlus className="w-4 h-4 mr-0.5" />
+                                        Add Another Sale
+                                    </Button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
