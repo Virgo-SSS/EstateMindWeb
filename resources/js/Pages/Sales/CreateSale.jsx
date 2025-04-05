@@ -5,6 +5,8 @@ import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/ui/input/Select";
 import { Download, ListPlus, LoaderCircle, Sheet, Trash2 } from 'lucide-react';
+import { useRef, useState } from "react";
+import parseSalesFromExcel from "../../helper/parseSalesFromExcel";
 
 export default function CreateSale({ projects }) {
     const newData = {
@@ -12,6 +14,9 @@ export default function CreateSale({ projects }) {
         date: new Date().toISOString().slice(0, 7),
         quantity: "",
     };
+    
+    const [processingFile, setProcessingFile] = useState(false);
+    const fileInputRef = useRef(null);
 
     const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
         sales: [newData],
@@ -48,7 +53,6 @@ export default function CreateSale({ projects }) {
         // Clear error for the specific field
         clearErrors(`sales.${index}.${name}`);
     };
-    console.log("errors", errors);
 
     const validateForm = () => {
         const requiredFields = ["project", "date", "quantity"];
@@ -89,6 +93,66 @@ export default function CreateSale({ projects }) {
         });
     };
 
+    const handleFileChange = (e) => {
+        console.log("File changed:", e.target.files);
+        e.preventDefault();
+        setProcessingFile(true);
+        
+        const file = e.target.files;
+        if(!validateFile(file)) {
+            setProcessingFile(false);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const data = new Uint8Array(event.target.result);
+            const salesData = parseSalesFromExcel(data, projects);
+
+            if (!salesData) {
+                setProcessingFile(false);
+                return;
+            }
+            
+            setData((prevData) => ({
+                ...prevData,
+                sales: salesData,
+            }));
+            
+            // Reset file input value so same file triggers onChange again
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+        };
+
+        reader.onerror = (error) => {
+            // TODO: Show error message to user
+            // You can use a toast notification or any other method to show the error
+            console.error("Error reading file:", error);
+        }
+        
+        reader.readAsArrayBuffer(file[0]);
+
+        setProcessingFile(false);
+    }
+
+    const validateFile = (files) => {
+        if (!files || files.length === 0) {
+            setProcessingFile(false);
+            return false;
+        }
+
+        const fileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+        if (!fileTypes.includes(files[0].type)) {
+            // TODO: Show error message to user
+            // You can use a toast notification or any other method to show the error
+            console.log("Invalid file type. Please upload an Excel file.");
+            return false;
+        }
+        
+        return true;
+    }
+
     return (
         <>
             <AppLayout>
@@ -121,9 +185,17 @@ export default function CreateSale({ projects }) {
                                     size="xs"
                                     startIcon={<Sheet className="w-4 h-4" />}
                                     className="bg-green-500 text-white hover:bg-green-600"
+                                    onClick={() => document.getElementById("file").click()}
+                                    disabled={processingFile}
                                 >
                                     Import Excel
+                                    {
+                                        processingFile && (
+                                            <LoaderCircle className="w-5 h-5 ml-2 text-white animate-spin" />
+                                        )
+                                    }
                                 </Button>
+                                <input ref={fileInputRef} type="file" hidden name="file" id="file" onChange={handleFileChange} />
                             </div>
                         </div>
 
