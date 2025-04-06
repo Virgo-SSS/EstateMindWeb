@@ -4,11 +4,14 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PredictionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Settings\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', [PredictionController::class, 'index'])->name('prediction.index');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'index'])->name('login');
@@ -20,9 +23,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.update');
 });
 
-
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout');
 
@@ -51,4 +53,5 @@ Route::middleware('auth')->group(function () {
     Route::put('/sales/{sale}', [SaleController::class, 'update'])->name('sales.update');
     Route::delete('/sales/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
     Route::get('/sales/download/sample', [SaleController::class, 'downloadSample'])->name('sales.download.sample');
+
 });
