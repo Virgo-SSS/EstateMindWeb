@@ -57,7 +57,7 @@ class CreateSaleTest extends TestCase
         $sales = [];
 
         foreach ($projects as $project) {
-            for($month = 1; $month <= 3; $month++) {
+            for ($month = 1; $month <= 3; $month++) {
                 $sales[] = [
                     'project' => $project->id,
                     'date' => now()->addMonths($month)->format('Y-m'),
@@ -88,7 +88,7 @@ class CreateSaleTest extends TestCase
 
     /**
      * TEST VALIDATION RULES
-     * 
+     *
      */
 
     public function test_validation_sales_is_required(): void
@@ -225,7 +225,8 @@ class CreateSaleTest extends TestCase
                     'quantity' => 'abc',
                 ],
             ],
-        ]);;
+        ]);
+        ;
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors([

@@ -10,10 +10,8 @@ use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SaleController extends Controller
 {
@@ -91,7 +89,7 @@ class SaleController extends Controller
         if (!file_exists($pathToFile)) {
             abort(404, 'File not found.');
         }
-        
+
         return response()->download($pathToFile, $name, $headers);
     }
 }

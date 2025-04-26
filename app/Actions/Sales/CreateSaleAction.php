@@ -38,7 +38,7 @@ class CreateSaleAction implements CreateSaleActionInterface
             foreach ($salesData as $sale) {
                 Sale::query()->updateOrCreate(
                     [
-                        'project_id' => $sale['project_id'], 
+                        'project_id' => $sale['project_id'],
                         'date' => $sale['date']
                     ],
                     [
