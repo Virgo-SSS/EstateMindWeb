@@ -4,7 +4,7 @@ import Label from "../../components/ui/label/Label";
 import Input from "../../components/ui/input/Input";
 import Button from "../../components/ui/button/Button";
 import Select from "../../components/ui/input/Select";
-import { Download, ListPlus, LoaderCircle, Sheet, Trash2 } from 'lucide-react';
+import { Download, ListPlus, LoaderCircle, Sheet, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import parseSalesFromExcel from "../../helper/parseSalesFromExcel";
 
@@ -18,7 +18,16 @@ export default function CreateSale({ projects }) {
   const [processingFile, setProcessingFile] = useState(false);
   const fileInputRef = useRef(null);
 
-  const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    errors,
+    reset,
+    setError,
+    clearErrors,
+  } = useForm({
     sales: [newData],
   });
 
@@ -89,7 +98,7 @@ export default function CreateSale({ projects }) {
       },
       onError: (err) => {
         console.log("Failed to create sale:", err);
-      }
+      },
     });
   };
 
@@ -129,12 +138,12 @@ export default function CreateSale({ projects }) {
       // TODO: Show error message to user
       // You can use a toast notification or any other method to show the error
       console.error("Error reading file:", error);
-    }
+    };
 
     reader.readAsArrayBuffer(file[0]);
 
     setProcessingFile(false);
-  }
+  };
 
   const validateFile = (files) => {
     if (!files || files.length === 0) {
@@ -142,7 +151,10 @@ export default function CreateSale({ projects }) {
       return false;
     }
 
-    const fileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+    const fileTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ];
     if (!fileTypes.includes(files[0].type)) {
       // TODO: Show error message to user
       // You can use a toast notification or any other method to show the error
@@ -151,7 +163,7 @@ export default function CreateSale({ projects }) {
     }
 
     return true;
-  }
+  };
 
   return (
     <>
@@ -168,7 +180,9 @@ export default function CreateSale({ projects }) {
         <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
           <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] w-6xl mx-auto">
             <div className="flex flex-col gap-2 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Create Sale</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Create Sale
+              </h3>
               <div>
                 <a href={route("sales.download.sample")} target="_blank">
                   <Button
@@ -189,13 +203,18 @@ export default function CreateSale({ projects }) {
                   disabled={processingFile}
                 >
                   Import Excel
-                  {
-                    processingFile && (
-                      <LoaderCircle className="w-5 h-5 ml-2 text-white animate-spin" />
-                    )
-                  }
+                  {processingFile && (
+                    <LoaderCircle className="w-5 h-5 ml-2 text-white animate-spin" />
+                  )}
                 </Button>
-                <input ref={fileInputRef} type="file" hidden name="file" id="file" onChange={handleFileChange} />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  hidden
+                  name="file"
+                  id="file"
+                  onChange={handleFileChange}
+                />
               </div>
             </div>
 
@@ -203,7 +222,10 @@ export default function CreateSale({ projects }) {
             <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {data.sales.map((item, index) => (
-                  <div key={index} className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-4 relative mb-3">
+                  <div
+                    key={index}
+                    className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-4 relative mb-3"
+                  >
                     <div className="px-6 py-4">
                       <button
                         type="button"
@@ -226,7 +248,11 @@ export default function CreateSale({ projects }) {
                           value={item.project}
                           required
                           options={[
-                            { value: "", label: "Select Project", disabled: true },
+                            {
+                              value: "",
+                              label: "Select Project",
+                              disabled: true,
+                            },
                             ...projects.map((project) => ({
                               value: project.id,
                               label: project.name,
@@ -277,13 +303,11 @@ export default function CreateSale({ projects }) {
                   </div>
                 ))}
 
-                {
-                  errors.sales && (
-                    <p className="mt-1.5 text-sm text-error-500">
-                      {errors.sales}
-                    </p>
-                  )
-                }
+                {errors.sales && (
+                  <p className="mt-1.5 text-sm text-error-500">
+                    {errors.sales}
+                  </p>
+                )}
 
                 {/* Buttons */}
                 <div className="flex justify-between">

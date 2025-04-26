@@ -4,12 +4,13 @@ export default function Checkbox({
   id,
   onChange,
   className = "",
-  disabled = false
+  disabled = false,
 }) {
   return (
     <label
-      className={`flex items-center space-x-3 group cursor-pointer ${disabled ? "cursor-not-allowed opacity-60" : ""
-        }`}
+      className={`flex items-center space-x-3 group cursor-pointer ${
+        disabled ? "cursor-not-allowed opacity-60" : ""
+      }`}
     >
       <div className="relative w-5 h-5">
         <input
@@ -18,7 +19,7 @@ export default function Checkbox({
           className={`w-5 h-5 appearance-none cursor-pointer dark:border-white border border-gray-300 checked:border-transparent rounded-md checked:bg-brand-500 disabled:opacity-60 
                     ${className}`}
           checked={checked}
-          onChange={e => onChange(e.target.checked)}
+          onChange={(e) => onChange(e.target.checked)}
           disabled={disabled}
         />
 
@@ -67,5 +68,5 @@ export default function Checkbox({
         </span>
       )}
     </label>
-  )
+  );
 }
