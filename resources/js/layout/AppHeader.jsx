@@ -86,7 +86,12 @@ const AppHeader = () => {
 
           {/* lg:hidden class is for hide logo if the size screen is large */}
           <Link href="/" className="lg:hidden">
-            <img src="./images/logo/abp-logo-icon.png" alt="Logo" width={100} />
+            <img
+              src="/images/logo/abp-logo-icon.png"
+              alt="Logo"
+              width={100}
+              height={100}
+            />
           </Link>
 
           {/* button show header menu in mobile view */}
@@ -121,8 +126,6 @@ const AppHeader = () => {
             <ThemeToggleButton />
 
             {/* <!-- Dark Mode Toggler --> */}
-            <NotificationDropdown />
-            {/* <!-- Notification Menu Area --> */}
           </div>
 
           {/* <!-- User Area --> */}

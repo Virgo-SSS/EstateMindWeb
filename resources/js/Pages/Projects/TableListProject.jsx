@@ -52,7 +52,7 @@ export default function TableListProject({ projects }) {
 
     const lowercaseQuery = query.toLowerCase().trim();
     const filtered = projects.filter((project) =>
-      project.name.toLowerCase().includes(lowercaseQuery),
+      project.name.toLowerCase().includes(lowercaseQuery)
     );
 
     setFilteredProjects(filtered);
@@ -64,7 +64,7 @@ export default function TableListProject({ projects }) {
       setSearchQuery(query);
       debouncedSearch(query);
     },
-    [debouncedSearch, projects],
+    [debouncedSearch, projects]
   );
 
   // Handlers with useCallback for better performance
@@ -78,7 +78,7 @@ export default function TableListProject({ projects }) {
       editForm.setData("name", project.name);
       setProjectToEdit(project);
     },
-    [editForm],
+    [editForm]
   );
 
   const handleUpdate = useCallback(
@@ -99,7 +99,7 @@ export default function TableListProject({ projects }) {
         },
       });
     },
-    [editForm, projectToEdit, cancelEditing],
+    [editForm, projectToEdit, cancelEditing]
   );
 
   const handleOnBlur = useCallback(
@@ -112,7 +112,7 @@ export default function TableListProject({ projects }) {
 
       handleUpdate(e);
     },
-    [projectToEdit, handleUpdate, cancelEditing],
+    [projectToEdit, handleUpdate, cancelEditing]
   );
 
   const handleKeyDown = useCallback(
@@ -124,7 +124,7 @@ export default function TableListProject({ projects }) {
         cancelEditing();
       }
     },
-    [handleUpdate, cancelEditing],
+    [handleUpdate, cancelEditing]
   );
 
   const confirmDelete = useCallback(
@@ -132,7 +132,7 @@ export default function TableListProject({ projects }) {
       deleteForm.setData("project", project);
       openModal();
     },
-    [deleteForm, openModal],
+    [deleteForm, openModal]
   );
 
   const handleDelete = useCallback(
@@ -157,13 +157,13 @@ export default function TableListProject({ projects }) {
         },
       });
     },
-    [deleteForm, closeModal],
+    [deleteForm, closeModal]
   );
 
   // Memoized empty state check
   const hasProjects = useMemo(
     () => filteredProjects && filteredProjects.length > 0,
-    [filteredProjects],
+    [filteredProjects]
   );
 
   return (
@@ -208,7 +208,7 @@ export default function TableListProject({ projects }) {
                     <TableDataCell>
                       {projectToEdit.id === project.id ? (
                         <>
-                          <div className="flex items-center gap-2 w-1/2">
+                          <div className="flex items-center gap-2">
                             <input
                               type="text"
                               value={editForm.data.name}
@@ -259,7 +259,11 @@ export default function TableListProject({ projects }) {
                         disabled={editForm.processing || deleteForm.processing}
                       >
                         <Trash2
-                          className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${editForm.processing || deleteForm.processing ? "opacity-50 cursor-not-allowed" : ""}`}
+                          className={`w-5 h-5 text-red-600 cursor-pointer hover:text-red-700 ${
+                            editForm.processing || deleteForm.processing
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                         />
                       </button>
                     </TableDataCell>
