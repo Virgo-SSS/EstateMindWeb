@@ -105,15 +105,14 @@ export default function Prediction({ projects }) {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Gradient & Stars */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_bottom,#071654_0%,#090a0f_100%)]">
-        <canvas id="starCanvas" className="absolute inset-0 -z-10"></canvas>
-      </div>
-
       {/* Header */}
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-300 
-                ${scrolled ? "bg-white/7 dark:bg-black/30 backdrop-blur-md border-b border-white/10" : "bg-transparent border-none"}`}
+                ${
+                  scrolled
+                    ? "bg-white/7 dark:bg-black/30 backdrop-blur-md border-b border-white/10"
+                    : "bg-transparent border-none"
+                }`}
       >
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
@@ -212,7 +211,9 @@ export default function Prediction({ projects }) {
                       <span
                         onClick={() => setPeriod(index + 1)}
                         key={index}
-                        className={`w-1/12 text-center cursor-pointer ${index + 1 === period ? "text-white font-semibold" : ""}`}
+                        className={`w-1/12 text-center cursor-pointer ${
+                          index + 1 === period ? "text-white font-semibold" : ""
+                        }`}
                       >
                         {index + 1}
                       </span>
