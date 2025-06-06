@@ -1,22 +1,29 @@
 import { useEffect, useState, useRef } from "react";
-import Chart from "chart.js/auto";
 import { Link, usePage } from "@inertiajs/react";
 import Button from "../../components/ui/button/Button";
 import Label from "../../components/ui/label/Label";
-import { ThemeProvider } from "../../context/ThemeContext";
-import ThemeTogglerTwo from "../../components/common/ThemeTogglerTwo";
 import Select from "../../components/ui/input/Select";
+import { Line } from "react-chartjs-2";
+import {
+  CategoryScale,
+  Chart,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
 
-const getRecommendation = (growthRate) => {
-  const rate = parseFloat(growthRate);
-  if (rate > 7)
-    return "This property shows exceptional growth potential. Strongly recommended for investment with high expected returns.";
-  if (rate > 5)
-    return "This property has above-average growth potential. Recommended for investment with good expected returns.";
-  if (rate > 3)
-    return "This property shows steady growth potential. Consider for investment with moderate expected returns.";
-  return "This property has below-average growth potential. May be suitable for long-term holding or personal use.";
-};
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function Prediction({ projects }) {
   const pageProps = usePage().props;
@@ -24,10 +31,50 @@ export default function Prediction({ projects }) {
   const [period, setPeriod] = useState(12);
   const [results, setResults] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const chartRef = useRef(null);
+  const labels = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "My First Dataset",
+        data: [65, 59, 80, 81, 56, 55, 40, 60, 70, 90, 100, 120],
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.1,
+      },
+    ],
+  };
+
+  // Simulate fetching results
 
   const handlePredict = () => {
-    alert("The prediction feature will be available soon. Stay tuned!");
+    if (!selectedProject) {
+      alert("Please select a housing project.");
+      return;
+    }
+
+    // Simulate an API call to fetch prediction results
+    const simulatedResults = {
+      predictedHouse: Array.from({ length: period }, (_, i) => ({
+        month: labels[i % 12],
+        total: `$${(Math.random() * 100000 + 200000).toFixed(2)}`,
+      })),
+    };
+
+    setResults(simulatedResults);
   };
 
   useEffect(() => {
@@ -38,73 +85,8 @@ export default function Prediction({ projects }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    const canvas = document.getElementById("starCanvas");
-    const ctx = canvas.getContext("2d");
-
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-
-    let particles = [];
-    const numStars = 150;
-
-    for (let i = 0; i < numStars; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        radius: Math.random() * 1.5 + 0.5,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        opacity: Math.random() * 0.5 + 0.5,
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = "#ffffff";
-
-      particles.forEach((p) => {
-        ctx.beginPath();
-        ctx.globalAlpha = p.opacity;
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
-        ctx.fill();
-      });
-
-      update();
-      requestAnimationFrame(draw);
-    };
-
-    const update = () => {
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // wrap around
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        // twinkle effect
-        p.opacity += (Math.random() - 0.5) * 0.05;
-        p.opacity = Math.max(0.3, Math.min(p.opacity, 1));
-      });
-    };
-
-    draw();
-
-    // Resize handler
-    const onResize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-gray-950">
       {/* Header */}
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-300 
@@ -152,7 +134,7 @@ export default function Prediction({ projects }) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-24 text-white">
+      <main className="container mx-auto px-4 py-24 text-white max-w-[1073px]">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             House Sales Predictor
@@ -234,43 +216,52 @@ export default function Prediction({ projects }) {
           </div>
         </div>
 
-        {/* {results && ( */}
-        <div className="bg-white/10 rounded-xl shadow-lg p-6 mb-8 backdrop-blur">
-          <h2 className="text-2xl font-bold mb-6">Prediction Results</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-green-500/10 p-4 rounded-lg border border-green-300/30">
-              <h3 className="text-sm font-medium">Predicted Price</h3>
-              <p className="text-2xl font-bold mt-1">0</p>
+        {results && (
+          <div className="bg-white/10 rounded-xl shadow-lg p-6 mb-8 backdrop-blur">
+            <h2 className="text-2xl font-bold mb-6">Prediction Results</h2>
+            <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 mb-8">
+              <div className="bg-green-500/10 p-4 rounded-lg border border-green-300/30">
+                <h3 className="text-sm font-medium mb-3">Predicted House</h3>
+                {/* Month, Predicted House */}
+                <table className="w-full text-sm text-left">
+                  <thead>
+                    <tr>
+                      <th className="px-2 py-1 border-b border-white/20">
+                        Month
+                      </th>
+                      <th className="px-2 py-1 border-b border-white/20">
+                        Predicted House
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {results?.predictedHouse.map((item, index) => (
+                      <tr key={index} className="hover:bg-white/5">
+                        <td className="px-2 py-1">{item.month}</td>
+                        <td className="px-2 py-1">{item.total}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-300/30">
+                <h3 className="text-sm font-medium">Potential Gain</h3>
+                <div className="h-80">
+                  <Line data={data} options={{}} className="w-full" />
+                </div>
+              </div>
             </div>
-            <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-300/30">
-              <h3 className="text-sm font-medium">Potential Gain</h3>
-              <p className="text-2xl font-bold mt-1">0</p>
+
+            <div className="text-center mt-8">
+              <button
+                onClick={() => setResults(null)}
+                className="px-6 py-2 text-white font-medium rounded-lg hover:bg-white/10 transition"
+              >
+                Start New Prediction
+              </button>
             </div>
-            <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-300/30">
-              <h3 className="text-sm font-medium">Annual Growth</h3>
-              <p className="text-2xl font-bold mt-1">{0}%</p>
-            </div>
           </div>
-
-          <div className="h-80">
-            <canvas ref={chartRef}></canvas>
-          </div>
-
-          <div className="mt-8 p-4 bg-white/10 rounded-lg border border-white/20">
-            <h3 className="text-lg font-medium mb-2">Our Recommendation</h3>
-            <p>{getRecommendation(Math.random() * 10)}</p>
-          </div>
-
-          <div className="text-center mt-8">
-            <button
-              onClick={() => setResults(null)}
-              className="px-6 py-2 text-white font-medium rounded-lg hover:bg-white/10 transition"
-            >
-              Start New Prediction
-            </button>
-          </div>
-        </div>
-        {/* )} */}
+        )}
       </main>
     </div>
   );
