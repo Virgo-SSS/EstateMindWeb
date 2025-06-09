@@ -65,15 +65,36 @@ export default function CreateSale({ projects }) {
 
   const validateForm = () => {
     const requiredFields = ["project", "date", "quantity"];
+
     let allFieldsFilled = true;
 
     data.sales.forEach((item, index) => {
+      // This code would go inside your inner forEach loop
       requiredFields.forEach((field) => {
-        if (!item[field]) {
+        let isInvalid = false;
+        let errorMessage = "";
+
+        switch (field) {
+          case "quantity":
+            if (item[field] == null) {
+              isInvalid = true;
+              errorMessage = "Quantity is required";
+            } else if (item[field] < 0) {
+              isInvalid = true;
+              errorMessage = "Quantity cannot be negative";
+            }
+            break;
+          default:
+            // Default check for any other fields (like 'date')
+            if (!item[field]) {
+              isInvalid = true;
+              errorMessage = `${field} is required`;
+            }
+            break;
+        }
+
+        if (isInvalid) {
           allFieldsFilled = false;
-
-          let errorMessage = `${field} is required`;
-
           setError(`sales.${index}.${field}`, errorMessage);
         } else {
           clearErrors(`sales.${index}.${field}`);
@@ -103,12 +124,13 @@ export default function CreateSale({ projects }) {
   };
 
   const handleFileChange = (e) => {
-    console.log("File changed:", e.target.files);
     e.preventDefault();
     setProcessingFile(true);
 
     const file = e.target.files;
     if (!validateFile(file)) {
+      // TODO: Show error message to user
+      console.log("Invalid file. Please upload an Excel file.");
       setProcessingFile(false);
       return;
     }
@@ -150,18 +172,17 @@ export default function CreateSale({ projects }) {
       setProcessingFile(false);
       return false;
     }
-
     const fileTypes = [
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "application/vnd.ms-excel",
     ];
+
     if (!fileTypes.includes(files[0].type)) {
       // TODO: Show error message to user
       // You can use a toast notification or any other method to show the error
       console.log("Invalid file type. Please upload an Excel file.");
       return false;
     }
-
     return true;
   };
 
