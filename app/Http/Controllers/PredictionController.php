@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\ActionContracts\Predictions\PredictionActionInterface;
+use App\DataTransferObjects\Predictions\PredictionDTO;
+use App\Http\Requests\Predictions\PredictionRequest;
 use App\Models\Project;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,6 +19,23 @@ class PredictionController extends Controller
             'projects' => Cache::remember('projects', 60 * 60 * 12, function () {
                 return Project::query()->get();
             }),
+            'results' => [
+                'predictedHouse' => session('predictedHouse', []),
+            ],
         ]);
+    }
+
+    public function predict(PredictionRequest $request, PredictionActionInterface $action): RedirectResponse
+    {
+        $results = $action->handle(PredictionDTO::fromArray(
+            $request->validated()
+        ));
+
+        // For now, we will just return a placeholder response.
+        return redirect()
+            ->back()
+            ->with([
+                'predictedHouse' => $results,
+            ]);
     }
 }

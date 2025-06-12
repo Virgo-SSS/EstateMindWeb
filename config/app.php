@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Prediction Service URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used to connect to the prediction service for generating
+    | predictions based on the provided data. It should be set to the URL
+    | of the prediction service API endpoint.
+    |
+    */
+
+    'prediction_service_url' => env('PREDICTION_SERVICE_URL',  'http://localhost:8001'),
 ];

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ModernDashboardController;
 use App\Http\Controllers\PredictionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SaleController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PredictionController::class, 'index'])->name('prediction.index');
+Route::post('/predict', [PredictionController::class, 'predict'])->name('prediction.predict');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'index'])->name('login');

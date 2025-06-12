@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import Button from "../../components/ui/button/Button";
 import Label from "../../components/ui/label/Label";
 import Select from "../../components/ui/input/Select";
@@ -25,56 +25,49 @@ Chart.register(
   Legend
 );
 
-export default function Prediction({ projects }) {
+export default function Prediction({ projects, results }) {
   const pageProps = usePage().props;
-  const [selectedProject, setSelectedProject] = useState("");
-  const [period, setPeriod] = useState(12);
-  const [results, setResults] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [65, 59, 80, 81, 56, 55, 40, 60, 70, 90, 100, 120],
-        fill: false,
-        borderColor: "rgb(75, 192, 192)",
-        tension: 0.1,
-      },
-    ],
-  };
+  const form = useForm({
+    project: "",
+    period: 12, // Default to 12 months
+  });
 
-  // Simulate fetching results
-
+  const data =
+    results.predictedHouse && results.predictedHouse.length > 0
+      ? {
+          labels: results.predictedHouse.map((item) => item.month),
+          datasets: [
+            {
+              label: "Total per Month",
+              data: results.predictedHouse.map((item) => item.total),
+              fill: false,
+              borderColor: "rgba(75,192,192,1)",
+              backgroundColor: "rgba(75,192,192,0.4)",
+              tension: 0.1,
+            },
+          ],
+        }
+      : {};
   const handlePredict = () => {
-    if (!selectedProject) {
+    if (!form.data.project) {
+      // Todo: handle error gracefully
       alert("Please select a housing project.");
       return;
     }
 
-    // Simulate an API call to fetch prediction results
-    const simulatedResults = {
-      predictedHouse: Array.from({ length: period }, (_, i) => ({
-        month: labels[i % 12],
-        total: `$${(Math.random() * 100000 + 200000).toFixed(2)}`,
-      })),
-    };
+    form.post(route("prediction.predict"), {
+      onSuccess: form.reset(),
+      onError: (error) => {
+        // Todo: handle error gracefully
+        alert("Failed to fetch prediction results. Please try again.");
+      },
+    });
+  };
 
-    setResults(simulatedResults);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    form.setData(name, Number(value));
   };
 
   useEffect(() => {
@@ -159,8 +152,8 @@ export default function Prediction({ projects }) {
                   <Select
                     id={"project"}
                     name={"project"}
-                    value={selectedProject}
-                    onChange={(e) => setSelectedProject(e.target.value)}
+                    value={form.data.project}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-500 text-white/90"
                     options={[
                       { value: "", label: "Select Project", disabled: true },
@@ -175,7 +168,9 @@ export default function Prediction({ projects }) {
                 <div>
                   <Label className={"text-white"} htmlFor={"period"}>
                     Prediction Period:{" "}
-                    <span className="font-bold text-brand-400">{period}</span>{" "}
+                    <span className="font-bold text-brand-400">
+                      {form.data.period}
+                    </span>{" "}
                     months
                   </Label>
                   <input
@@ -184,17 +179,19 @@ export default function Prediction({ projects }) {
                     type="range"
                     min="1"
                     max="12"
-                    value={period}
-                    onChange={(e) => setPeriod(Number(e.target.value))}
+                    value={form.data.period}
+                    onChange={handleChange}
                     className="w-full h-3 bg-white/40 rounded-lg appearance-none cursor-pointer"
                   />
                   <div className="flex justify-between text-sm text-white/70 mt-2">
                     {[...Array(12)].map((_, index) => (
                       <span
-                        onClick={() => setPeriod(index + 1)}
+                        onClick={() => form.setData("period", index + 1)}
                         key={index}
                         className={`w-1/12 text-center cursor-pointer ${
-                          index + 1 === period ? "text-white font-semibold" : ""
+                          index + 1 === form.data.period
+                            ? "text-white font-semibold"
+                            : ""
                         }`}
                       >
                         {index + 1}
@@ -216,7 +213,7 @@ export default function Prediction({ projects }) {
           </div>
         </div>
 
-        {results && (
+        {results.predictedHouse.length > 0 && (
           <div className="bg-white/10 rounded-xl shadow-lg p-6 mb-8 backdrop-blur">
             <h2 className="text-2xl font-bold mb-6">Prediction Results</h2>
             <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 mb-8">
@@ -235,7 +232,7 @@ export default function Prediction({ projects }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {results?.predictedHouse.map((item, index) => (
+                    {results.predictedHouse.map((item, index) => (
                       <tr key={index} className="hover:bg-white/5">
                         <td className="px-2 py-1">{item.month}</td>
                         <td className="px-2 py-1">{item.total}</td>
@@ -250,15 +247,6 @@ export default function Prediction({ projects }) {
                   <Line data={data} options={{}} className="w-full" />
                 </div>
               </div>
-            </div>
-
-            <div className="text-center mt-8">
-              <button
-                onClick={() => setResults(null)}
-                className="px-6 py-2 text-white font-medium rounded-lg hover:bg-white/10 transition"
-              >
-                Start New Prediction
-              </button>
             </div>
           </div>
         )}
