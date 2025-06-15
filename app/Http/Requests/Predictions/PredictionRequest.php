@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Predictions;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PredictionRequest extends FormRequest
 {
@@ -22,7 +23,9 @@ class PredictionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project' => ['required', 'int', 'exists:projects,id'],
+            'project' => ['nullable', Rule::requiredIf($this->input('project')), Rule::when($this->input('project') > 0, function ($rule) {
+                return $rule->exists('projects', 'id');
+            })],
             'period' => ['required', 'int', 'min:1', 'max:12']
         ];
     }

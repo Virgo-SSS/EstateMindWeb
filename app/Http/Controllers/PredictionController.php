@@ -31,7 +31,6 @@ class PredictionController extends Controller
             $request->validated()
         ));
 
-        // For now, we will just return a placeholder response.
         return redirect()
             ->back()
             ->with([

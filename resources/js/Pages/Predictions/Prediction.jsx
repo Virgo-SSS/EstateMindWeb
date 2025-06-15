@@ -39,7 +39,7 @@ export default function Prediction({ projects, results }) {
           labels: results.predictedHouse.map((item) => item.month),
           datasets: [
             {
-              label: "Total per Month",
+              label: "Predicted House Sales",
               data: results.predictedHouse.map((item) => item.total),
               fill: false,
               borderColor: "rgba(75,192,192,1)",
@@ -49,17 +49,13 @@ export default function Prediction({ projects, results }) {
           ],
         }
       : {};
-  const handlePredict = () => {
-    if (!form.data.project) {
-      // Todo: handle error gracefully
-      alert("Please select a housing project.");
-      return;
-    }
 
+  const handlePredict = () => {
     form.post(route("prediction.predict"), {
       onSuccess: form.reset(),
       onError: (error) => {
         // Todo: handle error gracefully
+        console.error("Prediction error:", error);
         alert("Failed to fetch prediction results. Please try again.");
       },
     });
@@ -127,7 +123,7 @@ export default function Prediction({ projects, results }) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-24 text-white max-w-[1073px]">
+      <main className="container mx-auto px-4 pt-24 text-white max-w-[1073px]">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             House Sales Predictor
@@ -156,7 +152,7 @@ export default function Prediction({ projects, results }) {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-500 text-white/90"
                     options={[
-                      { value: "", label: "Select Project", disabled: true },
+                      { value: "", label: "Select Project" },
                       ...projects.map((project) => ({
                         value: project.id,
                         label: project.name,
@@ -207,19 +203,26 @@ export default function Prediction({ projects, results }) {
                 onClick={handlePredict}
                 className="animate-bounce"
               >
-                Predict Future Prices
+                Start Predict
               </Button>
+            </div>
+            {/* Notes for user to tell them if predicition is not 100% accurate */}
+            <div>
+              <p className="text-sm text-white/70 mt-6 font-bold">
+                Note: The predictions are based on historical data. They are not
+                guaranteed to be accurate and should be used as a guide only.
+              </p>
             </div>
           </div>
         </div>
-
+      </main>
+      <main className="container mx-auto px-4  text-white">
         {results.predictedHouse.length > 0 && (
           <div className="bg-white/10 rounded-xl shadow-lg p-6 mb-8 backdrop-blur">
             <h2 className="text-2xl font-bold mb-6">Prediction Results</h2>
             <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 mb-8">
               <div className="bg-green-500/10 p-4 rounded-lg border border-green-300/30">
                 <h3 className="text-sm font-medium mb-3">Predicted House</h3>
-                {/* Month, Predicted House */}
                 <table className="w-full text-sm text-left">
                   <thead>
                     <tr>
@@ -242,10 +245,8 @@ export default function Prediction({ projects, results }) {
                 </table>
               </div>
               <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-300/30">
-                <h3 className="text-sm font-medium">Potential Gain</h3>
-                <div className="h-80">
-                  <Line data={data} options={{}} className="w-full" />
-                </div>
+                <h3 className="text-sm font-medium">Potential Sales</h3>
+                <Line data={data} options={{}} className="w-full" />
               </div>
             </div>
           </div>

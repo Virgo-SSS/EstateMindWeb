@@ -7,15 +7,15 @@ use App\Models\Project;
 class PredictionDTO
 {
     public function __construct(
-        public Project $project,
+        public ?Project $project,
         public int $period,
     ) {
     }
 
     public static function fromArray(array $data): self
-    {
+    {  
         return new self(
-            project: Project::query()->find($data['project']),
+            project: $data['project'] ? Project::find($data['project']) : null,
             period: $data['period'],
         );
     }

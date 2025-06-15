@@ -4,7 +4,9 @@ namespace App\Actions\Predictions;
 
 use App\ActionContracts\Predictions\PredictionActionInterface;
 use App\DataTransferObjects\Predictions\PredictionDTO;
+use App\Models\Sale;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -12,16 +14,24 @@ class PredictionAction implements PredictionActionInterface
 {
     public function handle(PredictionDTO $prediction): array
     {
-        $project = $prediction->project;
+        $sales = [];
         $period = $prediction->period;
+        $project = $prediction->project;
 
-        // Assuming you have a Prediction model to save this data
+        if(!$project) {
+            $sales = Sale::query()
+            ->select('date', DB::raw('SUM(quantity) as quantity'))
+            ->groupBy('date')
+            ->get();
+        } else {
+            $sales = $project->sales()->get();
+        }
+
+
+        //  Prediction model to save this data
         // Prediction::create(['project_id' => $project->id, 'period' => $period]);
-
-        $salesData = $project->sales()->get();
-
         $response = Http::asJson()->post(config('app.prediction_service_url') . '/predict', [
-            'sales' => $salesData->toArray(),
+            'sales' => $sales->toArray(),
             'period' => $period,
         ]);
 
@@ -48,7 +58,7 @@ class PredictionAction implements PredictionActionInterface
 
         $predictions = collect($results['predictions'])->map(function ($prediction) {
             return [
-                'month' => Carbon::parse($prediction['date'])->format('Y-m'),
+                'month' => Carbon::parse($prediction['date'])->format('F Y'),
                 'total' => round($prediction['total']),
             ];
         });
