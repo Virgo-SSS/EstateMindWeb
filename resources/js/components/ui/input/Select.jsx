@@ -46,7 +46,9 @@ export default function Select({
             key={index}
             value={option.value}
             disabled={option.disabled}
-            className={`${option.disabled ? disabledOptionClass : enabledOptionClass}`}
+            className={`${
+              option.disabled ? disabledOptionClass : enabledOptionClass
+            }`}
           >
             {option.label}
           </option>
@@ -59,8 +61,8 @@ export default function Select({
             error
               ? "text-error-500"
               : success
-                ? "text-success-500"
-                : "text-gray-500"
+              ? "text-success-500"
+              : "text-gray-500"
           }`}
         >
           {hint}

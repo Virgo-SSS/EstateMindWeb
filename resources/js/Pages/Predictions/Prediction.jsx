@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import Button from "../../components/ui/button/Button";
 import Label from "../../components/ui/label/Label";
@@ -24,6 +24,23 @@ Chart.register(
   Tooltip,
   Legend
 );
+
+const recommendationLists = {
+  High: [
+    "Consider focusing marketing efforts during this month to maximize sales.",
+    "This is a prime time to sell! Maximize your home's visibility with professional photography and a virtual tour.",
+    "The market is on your side. Price your home competitively to potentially attract multiple offers.",
+    "Leverage the expected sales boom by hosting an open house to create a sense of urgency among buyers.",
+  ],
+  Moderate: [
+    "Sales are steady. Stand out from the crowd with a unique marketing approach, such as a twilight photoshoot.",
+    "With moderate sales expected, accurate pricing is key to attracting serious buyers.",
+  ],
+  Low: [
+    "While sales are predicted to be slower, serious buyers are still out there. Focus on high-quality online marketing.",
+    "In a buyer's market, a competitive price is your strongest tool. Consider pricing slightly below comparable homes.",
+  ],
+};
 
 export default function Prediction({ projects, results }) {
   const pageProps = usePage().props;
@@ -73,6 +90,36 @@ export default function Prediction({ projects, results }) {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // useEffect hook runs the logic once after the component mounts
+  const generatePeakSalesRecommendation = (salesData) => {
+    if (!salesData || salesData.length === 0) {
+      return "No sales data available.";
+    }
+
+    // Step 1: Find the peak month data.
+    const peakMonthData = salesData.reduce(
+      (max, current) => (current.total > max.total ? current : max),
+      salesData[0]
+    );
+
+    const peakMonth = peakMonthData.month;
+    const peakSales = peakMonthData.total;
+
+    // Step 2: Since this is the peak, we use the "High" category recommendations.
+    const highTierRecommendations = recommendationLists.High;
+
+    // Randomly select one recommendation.
+    const randomIndex = Math.floor(
+      Math.random() * highTierRecommendations.length
+    );
+    const chosenRecommendation = highTierRecommendations[randomIndex];
+
+    // Step 3: Format the final output string.
+    const finalString = `Based on the predicted sales, the highest sales are expected in ${peakMonth} with a total of ${peakSales}. ${chosenRecommendation}`;
+
+    return finalString;
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gray-950">
@@ -152,7 +199,8 @@ export default function Prediction({ projects, results }) {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-500 text-white/90"
                     options={[
-                      { value: "", label: "Select Project" },
+                      { value: "s", label: "Select Project", disabled: true },
+                      { value: "", label: "All Projects" },
                       ...projects.map((project) => ({
                         value: project.id,
                         label: project.name,
@@ -243,6 +291,13 @@ export default function Prediction({ projects, results }) {
                     ))}
                   </tbody>
                 </table>
+                {/* Recommendation */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium">Recommendation: </h4>
+                  <p className="text-xs text-white/70">
+                    {generatePeakSalesRecommendation(results.predictedHouse)}
+                  </p>
+                </div>
               </div>
               <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-300/30">
                 <h3 className="text-sm font-medium">Potential Sales</h3>
