@@ -16,7 +16,7 @@ class PredictionController extends Controller
     public function index(): Response
     {
         return Inertia::render('Predictions/Prediction', [
-            'projects' => Cache::remember('projects', 60 * 60 * 12, function () {
+            'projects' => Cache::get('projects', function () {
                 return Project::query()->get();
             }),
             'results' => [

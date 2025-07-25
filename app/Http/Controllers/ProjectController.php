@@ -25,6 +25,7 @@ class ProjectController extends Controller
     {
         Project::query()->create(['name' => $request->name]);
         Cache::forget('projects');
+        Cache::forget('sales');
 
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
@@ -33,6 +34,7 @@ class ProjectController extends Controller
     {
         $project->update(['name' => $request->name]);
         Cache::forget('projects');
+        Cache::forget('sales');
 
         return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }

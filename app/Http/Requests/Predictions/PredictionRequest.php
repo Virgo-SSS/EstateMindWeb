@@ -23,8 +23,10 @@ class PredictionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project' => ['nullable', Rule::requiredIf($this->input('project')), Rule::when($this->input('project') > 0, function ($rule) {
-                return $rule->exists('projects', 'id');
+            'project' => [Rule::when($this->input('project') > 0, function ($rule) {
+                return ['required', 'int', 'exists:projects,id'];
+            }, function ($rule) {
+                return ['nullable', 'int'];
             })],
             'period' => ['required', 'int', 'min:1', 'max:12']
         ];
