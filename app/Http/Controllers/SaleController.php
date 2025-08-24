@@ -17,13 +17,13 @@ class SaleController extends Controller
 {
     public function index(): Response
     {
+        $sales = Sale::query()
+            ->with(['project'])
+            ->latest()
+            ->paginate(15);
+
         return Inertia::render('Sales/Sales', [
-            'sales' => Cache::remember('sales', 60 * 60 * 12, function () {
-                return Sale::query()
-                    ->with(['project'])
-                    ->latest()
-                    ->get();
-            }),
+            'sales' => $sales,
         ]);
     }
 

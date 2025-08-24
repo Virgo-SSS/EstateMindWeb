@@ -14,6 +14,7 @@ import WarningModal from "../../components/ui/modal/WarningModal";
 import { useModal } from "../../hooks/useModal";
 
 export default function Sales({ sales }) {
+  console.log(sales);
   const { isOpen, openModal, closeModal } = useModal();
   const deleteForm = useForm({
     sale: null,
@@ -24,7 +25,7 @@ export default function Sales({ sales }) {
       deleteForm.setData("sale", sale);
       openModal();
     },
-    [deleteForm, openModal],
+    [deleteForm, openModal]
   );
 
   const handleDelete = (e) => {
@@ -50,7 +51,7 @@ export default function Sales({ sales }) {
   };
 
   const hasSales = useMemo(() => {
-    return sales.length > 0;
+    return sales.data.length > 0;
   }, [sales]);
 
   return (
@@ -81,7 +82,7 @@ export default function Sales({ sales }) {
                 </TableHeader>
                 <tbody>
                   {hasSales ? (
-                    sales.map((sale) => (
+                    sales.data.map((sale) => (
                       <tr key={sale.id}>
                         <TableDataCell>{sale.project.name}</TableDataCell>
                         <TableDataCell>
@@ -117,6 +118,29 @@ export default function Sales({ sales }) {
               </Table>
             </TableCardBody>
           </TableCard>
+          {sales.data.length > 0 && (
+            <div className="mt-4">
+              <nav
+                className="inline-flex -space-x-px rounded-md shadow-sm"
+                aria-label="Pagination"
+              >
+                {sales.links.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.url || "#"}
+                    className={`${
+                      link.active
+                        ? "z-10 bg-primary-500 text-white hover:bg-primary-600"
+                        : "bg-white text-gray-500 hover:bg-gray-50"
+                    } relative inline-flex items-center px-4 py-2 text-sm font-medium border border-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500`}
+                    dangerouslySetInnerHTML={{ __html: link.label }}
+                    as="button"
+                    disabled={!link.url}
+                  />
+                ))}
+              </nav>
+            </div>
+          )}
         </div>
       </AppLayout>
       <WarningModal
