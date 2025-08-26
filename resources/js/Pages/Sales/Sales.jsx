@@ -1,21 +1,33 @@
-import { Link, useForm } from "@inertiajs/react";
+import { Link, useForm, router } from "@inertiajs/react";
 import AppLayout from "../../layout/AppLayout";
 import Button from "../../components/ui/button/Button";
-import { CopyPlus, LoaderCircle, Pencil, Trash2 } from "lucide-react";
+import {
+  CopyPlus,
+  LoaderCircle,
+  Pencil,
+  Trash2,
+  Filter,
+  X,
+} from "lucide-react";
 import TableCard from "../../components/ui/table/TableCard";
 import TableCardBody from "../../components/ui/table/TableCardBody";
+import TableCardHeader from "../../components/ui/table/TableCardHeader";
 import TableHeaderCell from "../../components/ui/table/TableHeaderCell";
 import Table from "../../components/ui/table/Table";
 import TableHeader from "../../components/ui/table/TableHeader";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import EmptyTableRow from "../../components/ui/table/EmptyTableRow";
 import TableDataCell from "../../components/ui/table/TableDataCell";
 import WarningModal from "../../components/ui/modal/WarningModal";
+import Select from "../../components/ui/input/Select";
 import { useModal } from "../../hooks/useModal";
 
-export default function Sales({ sales }) {
+export default function Sales({ sales, projects = [], filters = {} }) {
   console.log(sales);
   const { isOpen, openModal, closeModal } = useModal();
+  const [selectedProject, setSelectedProject] = useState(filters.project || "");
+  const [isFiltering, setIsFiltering] = useState(false);
+
   const deleteForm = useForm({
     sale: null,
   });
@@ -50,9 +62,48 @@ export default function Sales({ sales }) {
     });
   };
 
+  const handleProjectChange = useCallback((e) => {
+    setSelectedProject(e.target.value);
+  }, []);
+
+  const applyFilter = useCallback(() => {
+    setIsFiltering(true);
+
+    router.get(
+      route("sales.index"),
+      {
+        project: selectedProject === "" ? undefined : selectedProject,
+      },
+      {
+        preserveState: false,
+        preserveScroll: false,
+        onFinish: () => setIsFiltering(false),
+      }
+    );
+  }, [selectedProject]);
+
+  const clearFilters = useCallback(() => {
+    setSelectedProject("");
+    setIsFiltering(true);
+
+    router.get(
+      route("sales.index"),
+      {},
+      {
+        preserveState: false,
+        preserveScroll: false,
+        onFinish: () => setIsFiltering(false),
+      }
+    );
+  }, []);
+
   const hasSales = useMemo(() => {
     return sales.data.length > 0;
   }, [sales]);
+
+  const hasActiveFilters = useMemo(() => {
+    return filters.project && filters.project !== "";
+  }, [filters]);
 
   return (
     <>
@@ -70,6 +121,65 @@ export default function Sales({ sales }) {
 
         <div className="space-y-6">
           <TableCard>
+            <TableCardHeader>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+                  Sales List
+                  {hasActiveFilters && (
+                    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                      (Filtered)
+                    </span>
+                  )}
+                </h3>
+              </div>
+              <div className="flex gap-3 items-center">
+                <div className="min-w-48">
+                  <Select
+                    id="project-filter"
+                    name="project-filter"
+                    placeholder="All Projects"
+                    value={selectedProject}
+                    onChange={handleProjectChange}
+                    options={[
+                      {
+                        value: "",
+                        label: "All Projects",
+                      },
+                      ...projects.map((project) => ({
+                        value: project.id,
+                        label: project.name,
+                      })),
+                    ]}
+                  />
+                </div>
+                <Button
+                  size="xs"
+                  onClick={applyFilter}
+                  disabled={isFiltering}
+                  className="bg-blue-500 text-white hover:bg-blue-600"
+                  startIcon={
+                    isFiltering ? (
+                      <LoaderCircle className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Filter className="w-4 h-4" />
+                    )
+                  }
+                >
+                  {isFiltering ? "Filtering..." : "Filter"}
+                </Button>
+                {hasActiveFilters && (
+                  <Button
+                    size="xs"
+                    onClick={clearFilters}
+                    disabled={isFiltering}
+                    className="bg-gray-500 text-white hover:bg-gray-600"
+                    startIcon={<X className="w-4 h-4" />}
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </TableCardHeader>
             <TableCardBody>
               <Table>
                 <TableHeader>
@@ -112,7 +222,13 @@ export default function Sales({ sales }) {
                       </tr>
                     ))
                   ) : (
-                    <EmptyTableRow message="No sales found" />
+                    <EmptyTableRow
+                      message={
+                        hasActiveFilters
+                          ? "No sales found matching the selected filters"
+                          : "No sales found"
+                      }
+                    />
                   )}
                 </tbody>
               </Table>

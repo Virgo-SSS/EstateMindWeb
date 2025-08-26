@@ -9,21 +9,38 @@ use App\Http\Requests\Sales\SaleUpdateRequest;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class SaleController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $sales = Sale::query()
-            ->with(['project'])
-            ->latest()
-            ->paginate(15);
+        $query = Sale::query()->with(['project'])->latest('date');
+        
+        // Apply project filter if provided
+        if ($request->filled('project') && $request->project !== '') {
+            $query->where('project_id', $request->project);
+        }
+        
+        $sales = $query->paginate(15);
+        
+        // Append query parameters to pagination links
+        $sales->appends($request->query());
+        
+        // Get all projects for the filter dropdown
+        $projects = Cache::remember('projects', 60 * 60 * 12, function () {
+            return Project::query()->get();
+        });
 
         return Inertia::render('Sales/Sales', [
             'sales' => $sales,
+            'projects' => $projects,
+            'filters' => [
+                'project' => $request->project ?? '',
+            ],
         ]);
     }
 
