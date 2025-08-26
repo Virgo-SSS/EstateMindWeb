@@ -45,6 +45,11 @@ const recommendationLists = {
 export default function Prediction({ projects, results }) {
   const pageProps = usePage().props;
   const [scrolled, setScrolled] = useState(false);
+  const [params, setParams] = useState({
+    project: "",
+    period: 12,
+  });
+
   const form = useForm({
     project: "",
     period: 12, // Default to 12 months
@@ -76,6 +81,8 @@ export default function Prediction({ projects, results }) {
         alert("Failed to fetch prediction results. Please try again.");
       },
     });
+
+    setParams({ ...params, ...form.data });
   };
 
   const handleChange = (e) => {
@@ -141,7 +148,9 @@ export default function Prediction({ projects, results }) {
                 className="w-10 h-10"
               />
             </div>
-            <h1 className="text-xl font-bold text-white">EstateMind</h1>
+            <h1 className="text-xl font-bold text-white">
+              PT Adi Bintan Permata
+            </h1>
           </div>
           <div className="flex items-center space-x-4">
             {pageProps.auth.user ? (
@@ -264,10 +273,28 @@ export default function Prediction({ projects, results }) {
           </div>
         </div>
       </main>
+
+      {/* Results Section */}
       <main className="container mx-auto px-4  text-white">
         {results.predictedHouse.length > 0 && (
           <div className="bg-white/10 rounded-xl shadow-lg p-6 mb-8 backdrop-blur">
             <h2 className="text-2xl font-bold mb-6">Prediction Results</h2>
+            <div>
+              <div className="mb-4 p-4">
+                <h3 className="text-lg font-medium mb-2">Parameters Used</h3>
+                <p className="text-sm text-white/70">
+                  <span className="font-semibold">Project: </span>
+                  {params.project
+                    ? projects.find((p) => p.id === params.project)?.name ||
+                      "Unknown Project"
+                    : "All Projects"}
+                </p>
+                <p className="text-sm text-white/70">
+                  <span className="font-semibold">Prediction Period: </span>
+                  {params.period} months
+                </p>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4 mb-8">
               <div className="bg-green-500/10 p-4 rounded-lg border border-green-300/30">
                 <h3 className="text-sm font-medium mb-3">Predicted House</h3>

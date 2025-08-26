@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title inertia>{{ config('app.name', 'EstateMind') }}</title>
+    <title inertia>{{ config('app.name', 'PT Adi Bintan Permata') }}</title>
 
     @routes
     @viteReactRefresh
